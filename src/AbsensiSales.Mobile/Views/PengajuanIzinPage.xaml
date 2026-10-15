@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.Mobile.Views.PengajuanIzinPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.Mobile.ViewModels"
+    x:DataType="vm:PengajuanIzinViewModel"
+    Title="Pengajuan Izin"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,16,20,24" Spacing="0">
+
+            <Label Text="Ajukan permohonan" Style="{StaticResource TitleLabel}" Margin="0,0,0,4" />
+            <Label Text="Pengajuan cuti atau izin sakit akan diteruskan ke HR untuk disetujui." Style="{StaticResource SubtitleLabel}" Margin="0,0,0,14" />
+
+            <Border Style="{StaticResource CardBorder}" Padding="20,24">
+                <VerticalStackLayout Spacing="14">
+
+                    <Label Text="Jenis permohonan" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" Stroke="{StaticResource Primary}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="0,12">
+                            <Label Text="Cuti" HorizontalOptions="Center" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PilihCutiCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="{StaticResource Surface}" Stroke="{StaticResource Border}" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="0,12">
+                            <Label Text="Izin Sakit" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" FontFamily="OpenSansSemibold" />
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PilihSakitCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+
+                    <Label Text="Tanggal mulai" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,4,0,6" />
+                    <DatePicker Date="{Binding TanggalMulai}" />
+
+                    <Label Text="Tanggal selesai" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,4,0,6" />
+                    <DatePicker Date="{Binding TanggalSelesai}" />
+
+                    <Label Text="Alasan" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,4,0,6" />
+                    <Border Style="{StaticResource CardBorder}" Padding="12" MinimumHeightRequest="90">
+                        <Editor Text="{Binding Alasan}" Placeholder="Tuliskan alasan permohonan..." AutoSize="TextChanges" />
+                    </Border>
+
+                    <Label Text="Lampiran surat / bukti (opsional)" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,4,0,6" />
+                    <Border Style="{StaticResource CardBorder}" Padding="12,0">
+                        <Entry Text="{Binding Lampiran}" Placeholder="Nama file surat/dokter" />
+                    </Border>
+
+                    <Label Text="{Binding PesanError}" TextColor="{StaticResource Danger}" FontSize="13" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Kirim permohonan >" Style="{StaticResource PrimaryButton}" Command="{Binding KirimCommand}" Margin="0,16,0,8" AutomationId="ButtonKirimIzin" />
+            <Button Text="Batal" Style="{StaticResource GhostButton}" Command="{Binding BatalCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

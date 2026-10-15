@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.HR.Views.DetailKunjunganPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.HR.ViewModels"
+    xmlns:controls="clr-namespace:AbsensiSales.HR.Controls"
+    x:DataType="vm:DetailKunjunganViewModel"
+    Title="Detail Kunjungan">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,20" Spacing="0">
+
+            <Label Text="{Binding Judul}" Style="{StaticResource PageTitle}" Margin="0,0,0,16" />
+
+            <!-- Sales -->
+            <controls:FloatingCard Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                    <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 24" WidthRequest="48" HeightRequest="48">
+                        <Label Text="{Binding Inisial}" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="Sales" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding NamaSales}" FontFamily="OpenSansSemibold" FontSize="16" />
+                        <Label Text="{Binding InfoSales}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="{Binding Status}" Style="{StaticResource BadgeSuccess}" VerticalOptions="Center" />
+                </Grid>
+            </controls:FloatingCard>
+
+            <!-- Toko & waktu -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="6" Margin="0,10,0,0">
+                <controls:FloatingCard Grid.Column="0" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Toko dikunjungi" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding NamaToko}" FontFamily="OpenSansSemibold" FontSize="15" />
+                        <Label Text="{Binding InfoToko}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    </VerticalStackLayout>
+                </controls:FloatingCard>
+                <controls:FloatingCard Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Waktu" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding WaktuAwal, StringFormat='Absensi awal {0} WIB'}" FontSize="13" />
+                        <Label Text="{Binding WaktuCatat, StringFormat='Dicatat {0} WIB'}" FontSize="13" />
+                    </VerticalStackLayout>
+                </controls:FloatingCard>
+            </Grid>
+
+            <!-- Lokasi -->
+            <controls:FloatingCard Style="{StaticResource Card}" Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Lokasi GPS" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    <Label Text="{Binding Lokasi}" FontFamily="OpenSansSemibold" FontSize="14" TextColor="{StaticResource Success}" />
+                </VerticalStackLayout>
+            </controls:FloatingCard>
+
+            <!-- Tujuan & catatan -->
+            <controls:FloatingCard Style="{StaticResource Card}" Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Tujuan kunjungan" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    <Label Text="{Binding Tujuan}" FontSize="14" />
+                    <Label Text="Catatan" FontSize="12" TextColor="{StaticResource TextSecondary}" Margin="0,6,0,0" />
+                    <Label Text="{Binding Catatan}" FontSize="14" />
+                </VerticalStackLayout>
+            </controls:FloatingCard>
+
+            <!-- Bukti foto -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="6" Margin="0,10,0,0">
+                <controls:FloatingCard Grid.Column="0" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Bukti wajah" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="140">
+                            <Label Text="WAJAH" FontSize="40" TextColor="{StaticResource TextOnNavy}" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="Wajah terverifikasi" FontSize="12" TextColor="{StaticResource Success}" />
+                    </VerticalStackLayout>
+                </controls:FloatingCard>
+                <controls:FloatingCard Grid.Column="1" Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Foto toko" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="140">
+                            <Label Text="TOKO" FontSize="40" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="Bukti kunjungan toko" FontSize="12" TextColor="{StaticResource Success}" />
+                    </VerticalStackLayout>
+                </controls:FloatingCard>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

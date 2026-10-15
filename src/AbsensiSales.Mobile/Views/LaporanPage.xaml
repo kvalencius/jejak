@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.Mobile.Views.LaporanPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.Mobile.ViewModels"
+    x:DataType="vm:LaporanViewModel"
+    Title="Laporan">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,16,20,24" Spacing="0">
+
+            <Label Text="Laporan saya" Style="{StaticResource TitleLabel}" Margin="0,0,0,4" />
+            <Label Text="{Binding InfoSales}" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,14" />
+
+            <!-- Pilih tanggal (tampilan) -->
+            <Border Style="{StaticResource CardBorder}" Padding="14" Margin="0,0,0,12">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="TGL" FontSize="16" VerticalOptions="Center" Margin="0,0,10,0" />
+                    <Label Grid.Column="1" Text="{Binding JudulTanggal}" FontFamily="OpenSansSemibold" FontSize="14" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Kartu ringkasan -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,14">
+                <Border Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Kunjungan" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding JumlahKunjungan}" FontSize="30" FontFamily="OpenSansSemibold" />
+                        <Label Text="{Binding StatusTargetHarian}" FontSize="12" TextColor="{StaticResource Success}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Absensi pertama" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding AbsensiPertama}" FontSize="30" FontFamily="OpenSansSemibold" />
+                        <Label Text="{Binding StatusAbsensiPertama}" FontSize="12" TextColor="{StaticResource Success}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Aksi -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,14">
+                <Button Grid.Column="0" Text="+ Ajukan izin" Style="{StaticResource SecondaryButton}" Command="{Binding AjukanIzinCommand}" HeightRequest="44" AutomationId="ButtonAjukanIzin" />
+                <Button Grid.Column="1" Text="Status permohonan" Style="{StaticResource SecondaryButton}" Command="{Binding LihatStatusPermohonanCommand}" HeightRequest="44" AutomationId="ButtonStatusPermohonan" />
+            </Grid>
+
+            <!-- Riwayat kunjungan -->
+            <Label Text="Riwayat kunjungan" Style="{StaticResource SectionTitle}" Margin="0,0,0,10" />
+
+            <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding DaftarKunjungan}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:LaporanItemViewModel">
+                        <Border Style="{StaticResource CardBorder}">
+                            <VerticalStackLayout Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="{Binding NamaToko}" FontFamily="OpenSansSemibold" FontSize="15" />
+                                    <Label Grid.Column="1" Text="{Binding Status}" Style="{StaticResource BadgeSuccess}" />
+                                </Grid>
+                                <Label Text="{Binding KodeToko, StringFormat='{0} - kunjungan tercatat'}" Style="{StaticResource SubtitleLabel}" />
+                                <Label Text="{Binding Alamat}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding CheckGps}" FontSize="11" TextColor="{StaticResource Success}" />
+                                    <Label Text="{Binding CheckWajah}" FontSize="11" TextColor="{StaticResource Success}" />
+                                    <Label Text="{Binding CheckFoto}" FontSize="11" TextColor="{StaticResource Success}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:AbsensiSales.HR.Controls">
+
+    <!-- Gaya DESKTOP HR: semua kontainer melayang (floating) di atas kanvas krem,
+         putih bersih, sudut membulat, bayangan lembut, warna solid tanpa gradient. -->
+
+    <!-- Template dasar kartu melayang: bayangan di belakang + kartu di depan -->
+    <ControlTemplate x:Key="FloatingCardTemplate">
+        <Grid>
+            <controls:SoftShadowView x:Name="PART_Shadow" />
+            <Border x:Name="PART_Card">
+                <ContentPresenter />
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="Page" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+    </Style>
+
+    <Style TargetType="ScrollView">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="PageTitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+    </Style>
+
+    <Style x:Key="PageSubtitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="SectionTitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+    </Style>
+
+    <!-- Kartu utama di dalam halaman -->
+    <Style x:Key="Card" TargetType="controls:FloatingCard">
+        <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="0.45" />
+        <Setter Property="ShadowRadius" Value="12" />
+        <Setter Property="ShadowOffset" Value="5" />
+    </Style>
+
+    <!-- Kartu angka kecil (statistik) -->
+    <Style x:Key="StatCard" TargetType="controls:FloatingCard">
+        <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource BorderSoft}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="18,16" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="0.4" />
+        <Setter Property="ShadowRadius" Value="12" />
+        <Setter Property="ShadowOffset" Value="5" />
+    </Style>
+
+    <!-- Panel besar: sidebar & top bar -->
+    <Style x:Key="SidebarCard" TargetType="controls:FloatingCard">
+        <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="16,18" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="0.5" />
+        <Setter Property="ShadowRadius" Value="16" />
+        <Setter Property="ShadowOffset" Value="8" />
+    </Style>
+
+    <Style x:Key="TopBarCard" TargetType="controls:FloatingCard">
+        <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="20,8" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="0.4" />
+        <Setter Property="ShadowRadius" Value="12" />
+        <Setter Property="ShadowOffset" Value="5" />
+    </Style>
+
+    <!-- Item menu sidebar (ruang bayangan disiapkan agar tidak melompat
+         saat item menjadi aktif) -->
+    <Style x:Key="MenuItem" TargetType="controls:FloatingCard">
+        <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowRadius" Value="10" />
+        <Setter Property="ShadowOffset" Value="4" />
+        <Setter Property="ShadowOpacity" Value="0" />
+    </Style>
+
+    <Style x:Key="MenuItemActive" TargetType="controls:FloatingCard" BasedOn="{StaticResource MenuItem}">
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryBright}" />
+        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="0.65" />
+        <Setter Property="ShadowRadius" Value="10" />
+        <Setter Property="ShadowOffset" Value="4" />
+    </Style>
+
+    <!-- Kartu putih polos untuk membungkus Entry (tanpa bayangan) -->
+    <Style x:Key="InputCard" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Padding" Value="12,0" />
+    </Style>
+
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="Padding" Value="18,0" />
+    </Style>
+
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderColor" Value="{StaticResource Border}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+    <Style x:Key="ApproveButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Mint}" />
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="HeightRequest" Value="36" />
+    </Style>
+
+    <Style x:Key="RejectButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DangerBg}" />
+        <Setter Property="TextColor" Value="{StaticResource Danger}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="HeightRequest" Value="36" />
+    </Style>
+
+    <Style x:Key="BadgeSuccess" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Success}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SuccessBg}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BadgeWarning" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Warning}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource WarningBg}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BadgeInfo" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryDark}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource InfoBg}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BadgeDanger" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Danger}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource DangerBg}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="TableHeader" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="8,8" />
+    </Style>
+
+    <Style x:Key="TableCell" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="8,8" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+</ResourceDictionary>

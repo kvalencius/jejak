@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.Mobile.Views.StatusPermohonanPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.Mobile.ViewModels"
+    x:DataType="vm:StatusPermohonanViewModel"
+    Title="Status Permohonan"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,16,20,24" Spacing="0">
+
+            <Label Text="Status permohonan" Style="{StaticResource TitleLabel}" Margin="0,0,0,4" />
+            <Label Text="{Binding InfoSales}" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,14" />
+
+            <Label Text="Belum ada permohonan." Style="{StaticResource SubtitleLabel}" IsVisible="{Binding Kosong}" Margin="0,0,0,10" />
+
+            <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding DaftarPermohonan}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PermohonanItemViewModel">
+                        <Border Style="{StaticResource CardBorder}">
+                            <VerticalStackLayout Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="{Binding Jenis}" FontFamily="OpenSansSemibold" FontSize="15" />
+                                    <Label Grid.Column="1" Text="{Binding Status}" Style="{StaticResource BadgeWarning}" />
+                                </Grid>
+                                <Label Text="{Binding Periode}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                                <Label Text="{Binding Alasan}" FontSize="13" />
+                                <Label Text="{Binding Diajukan, StringFormat='Diajukan {0}'}" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Button Text="+ Ajukan permohonan baru" Style="{StaticResource SecondaryButton}" Command="{Binding AjukanBaruCommand}" Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

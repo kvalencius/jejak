@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Palet "Jejak Sales" versi DESKTOP HR: kanvas krem hangat,
+         aksen kuning pastel, semua warna solid (tanpa gradient).
+         Semua nilai di sini dipakai ulang lewat StaticResource. -->
+
+    <!-- Kanvas & permukaan -->
+    <Color x:Key="Background">#F9F6EE</Color>
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="SurfaceAlt">#FFFDF7</Color>
+    <Color x:Key="Border">#EFE9DC</Color>
+    <Color x:Key="BorderSoft">#FFF3C9</Color>
+
+    <!-- Aksen utama: kuning pastel -->
+    <Color x:Key="Primary">#F3D152</Color>
+    <Color x:Key="PrimaryBright">#FED766</Color>
+    <Color x:Key="PrimarySoft">#FEF08A</Color>
+    <Color x:Key="PrimaryDark">#8A5A00</Color>
+    <Color x:Key="OnPrimary">#594100</Color>
+
+    <!-- Aksen pendukung (untuk chart / highlight) -->
+    <Color x:Key="Yellow">#FED766</Color>
+    <Color x:Key="YellowDark">#E8C33F</Color>
+    <Color x:Key="Peach">#FBA87E</Color>
+    <Color x:Key="Coral">#F88D6A</Color>
+    <Color x:Key="Mint">#B4E0A5</Color>
+    <Color x:Key="MintDark">#A3DB99</Color>
+
+    <!-- Netral gelap & teks -->
+    <Color x:Key="Navy">#2B2319</Color>
+    <Color x:Key="NavySoft">#F1EADB</Color>
+    <Color x:Key="TextPrimary">#2B2319</Color>
+    <Color x:Key="TextSecondary">#8C8275</Color>
+    <Color x:Key="TextOnNavy">#F3ECDD</Color>
+
+    <!-- Bayangan floating: kuning pastel super muda, nyaris putih -->
+    <Color x:Key="ShadowColor">#FFF7DB</Color>
+
+    <!-- Status -->
+    <Color x:Key="Success">#3F9160</Color>
+    <Color x:Key="SuccessBg">#E9F6E6</Color>
+    <Color x:Key="Warning">#B07C00</Color>
+    <Color x:Key="WarningBg">#FFF3C9</Color>
+    <Color x:Key="Danger">#C6402F</Color>
+    <Color x:Key="DangerBg">#FDECEA</Color>
+    <Color x:Key="InfoBg">#FFF7D6</Color>
+
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+    <SolidColorBrush x:Key="NavyBrush" Color="{StaticResource Navy}" />
+    <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource Background}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+</ResourceDictionary>

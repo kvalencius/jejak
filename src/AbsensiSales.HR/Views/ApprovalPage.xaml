@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.HR.Views.ApprovalPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.HR.ViewModels"
+    xmlns:controls="clr-namespace:AbsensiSales.HR.Controls"
+    x:DataType="vm:ApprovalViewModel"
+    Title="Permohonan Cuti &amp; Izin">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,20" Spacing="0">
+
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="Kelola permohonan cuti &amp; izin" Style="{StaticResource PageTitle}" />
+                    <Label Text="Periksa dan setujui permohonan yang diajukan oleh sales." Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+                <Label Grid.Column="1" Text="{Binding JumlahPending, StringFormat='{0} menunggu'}" Style="{StaticResource BadgeWarning}" VerticalOptions="Center" />
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding DaftarPermohonan}" Spacing="4" Margin="0,16,0,0">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PermohonanItem">
+                        <controls:FloatingCard Style="{StaticResource Card}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding Jenis}" FontFamily="OpenSansSemibold" FontSize="16" />
+                                        <Label Text="{Binding NamaSales}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                                        <Label Text="{Binding Nip}" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="1" Text="{Binding Status}" Style="{StaticResource BadgeWarning}" VerticalOptions="Start" />
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="Periode" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                                        <Label Text="{Binding Periode}" FontSize="13" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="Diajukan" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                                        <Label Text="{Binding Diajukan}" FontSize="13" />
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Alasan" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                                    <Label Text="{Binding Alasan}" FontSize="13" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Lampiran" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                                    <Label Text="{Binding Lampiran}" FontSize="13" TextColor="{StaticResource PrimaryDark}" />
+                                </VerticalStackLayout>
+
+                                <Label Text="{Binding CatatanHr, StringFormat='Catatan HR: {0}'}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+
+                                <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="10" IsVisible="{Binding Pending}">
+                                    <Button Grid.Column="0" Text="Setujui" Style="{StaticResource ApproveButton}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ApprovalViewModel}, Mode=FindAncestorBindingContext}, Path=SetujuiCommand}" CommandParameter="{Binding .}" />
+                                    <Button Grid.Column="1" Text="Tolak" Style="{StaticResource RejectButton}" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ApprovalViewModel}, Mode=FindAncestorBindingContext}, Path=TolakCommand}" CommandParameter="{Binding .}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </controls:FloatingCard>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

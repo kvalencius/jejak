@@ -1,0 +1,15 @@
+# Build
+bin/
+obj/
+*.user
+.vs/
+
+# Database lokal (jangan di-commit)
+*.db3
+
+# Model face recognition (unduh manual, lihat README)
+models/*.onnx
+models/*.xml
+reference_faces/*.jpg
+reference_faces/*.jpeg
+reference_faces/*.png

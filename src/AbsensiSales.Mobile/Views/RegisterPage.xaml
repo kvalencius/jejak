@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.Mobile.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.Mobile.ViewModels"
+    x:DataType="vm:RegisterViewModel"
+    Title="Daftar Sales"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,32,24,32" Spacing="0">
+
+            <Label Text="Buat akun sales" Style="{StaticResource TitleLabel}" Margin="0,0,0,6" />
+            <Label Text="Daftarkan akun untuk mulai mencatat absensi dan kunjungan toko." Style="{StaticResource SubtitleLabel}" Margin="0,0,0,20" />
+
+            <Border Style="{StaticResource CardBorder}" Padding="20,24">
+                <VerticalStackLayout Spacing="0">
+
+                <Label Text="Nama lengkap" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
+                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
+                    <Entry Text="{Binding Nama}" Placeholder="Nama lengkap" />
+                </Border>
+
+                <Label Text="NIP / ID Sales" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
+                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
+                    <Entry Text="{Binding Nip}" Placeholder="SLS-000" />
+                </Border>
+
+                <Label Text="Username" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
+                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
+                    <Entry Text="{Binding Username}" Placeholder="username" />
+                </Border>
+
+                <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
+                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,8">
+                    <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Minimal 6 karakter" />
+                </Border>
+
+                <Label Text="{Binding PesanError}" TextColor="{StaticResource Danger}" FontSize="13" Margin="0,8,0,0" />
+
+                <Button Text="Daftar >" Style="{StaticResource PrimaryButton}" Command="{Binding DaftarCommand}" Margin="0,16,0,10" />
+                <Button Text="Kembali" Style="{StaticResource GhostButton}" Command="{Binding KembaliCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

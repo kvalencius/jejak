@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AbsensiSales.Core/AbsensiSales.Core.csproj" />
+    <Project Path="src/AbsensiSales.Face/AbsensiSales.Face.csproj" />
+    <Project Path="src/AbsensiSales.HR/AbsensiSales.HR.csproj" />
+    <Project Path="src/AbsensiSales.Mobile/AbsensiSales.Mobile.csproj" />
+  </Folder>
+</Solution>

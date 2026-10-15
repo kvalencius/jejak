@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AbsensiSales.HR.Views.HrLoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:AbsensiSales.HR.ViewModels"
+    xmlns:controls="clr-namespace:AbsensiSales.HR.Controls"
+    x:DataType="vm:HrLoginViewModel"
+    Title="Login Admin HRD"
+    BackgroundColor="{StaticResource Background}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid Padding="14" RowDefinitions="*" ColumnDefinitions="*,*" ColumnSpacing="14">
+
+        <!-- Panel kiri: branding (kuning pastel melayang) -->
+        <controls:FloatingCard
+            Grid.Column="0"
+            Style="{StaticResource Card}"
+            BackgroundColor="{StaticResource PrimaryBright}"
+            StrokeThickness="0"
+            CornerRadius="24"
+            Padding="40"
+            ShadowRadius="16"
+            ShadowOffset="8"
+            ShadowOpacity="0.45">
+            <VerticalStackLayout Spacing="16" VerticalOptions="Center">
+                <Label Text="Jejak Sales" TextColor="{StaticResource TextPrimary}" FontSize="32" FontFamily="OpenSansSemibold" />
+                <Label Text="Sistem Absensi &amp; Penggajian Sales" TextColor="{StaticResource OnPrimary}" FontSize="16" />
+                <Label Text="Panel Admin HRD - pantau kehadiran, kelola permohonan, dan rekap penggajian dalam satu tempat." TextColor="{StaticResource OnPrimary}" FontSize="13" Margin="0,8,0,0" />
+                <Border BackgroundColor="{StaticResource Surface}" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,8" HorizontalOptions="Start" Margin="0,16,0,0">
+                    <Label Text="PD. INDO PELITA" TextColor="{StaticResource TextPrimary}" FontFamily="OpenSansSemibold" FontSize="12" />
+                </Border>
+            </VerticalStackLayout>
+        </controls:FloatingCard>
+
+        <!-- Panel kanan: form login -->
+        <controls:FloatingCard
+            Grid.Column="1"
+            Style="{StaticResource Card}"
+            Padding="36"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            WidthRequest="420">
+            <VerticalStackLayout Spacing="14">
+                <Label Text="Masuk Admin HRD" FontSize="24" FontFamily="OpenSansSemibold" />
+                <Label Text="Gunakan akun HR untuk mengelola data absensi sales." Style="{StaticResource PageSubtitle}" Margin="0,0,0,10" />
+
+                <Label Text="Username" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,4" />
+                <Border Style="{StaticResource InputCard}">
+                    <Entry Text="{Binding Username}" Placeholder="admin" />
+                </Border>
+
+                <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,4,0,4" />
+                <Border Style="{StaticResource InputCard}">
+                    <Entry Text="{Binding Password}" IsPassword="True" Placeholder="--------" />
+                </Border>
+
+                <Label Text="{Binding PesanError}" TextColor="{StaticResource Danger}" FontSize="13" />
+
+                <Button Text="Masuk >" Style="{StaticResource PrimaryButton}" Command="{Binding MasukCommand}" Margin="0,8,0,4" AutomationId="ButtonHrLogin" />
+                <Button Text="Daftar akun HRD baru" Style="{StaticResource SecondaryButton}" Command="{Binding BukaRegisterCommand}" />
+
+                <Label Text="Demo: admin / admin123" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" FontSize="12" Margin="0,8,0,0" />
+            </VerticalStackLayout>
+        </controls:FloatingCard>
+
+    </Grid>
+</ContentPage>
