@@ -1,3 +1,4 @@
+using System.Globalization;
 using AbsensiSales.Core.Repositories;
 using AbsensiSales.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -28,7 +29,7 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private bool _sedangMemproses;
 
-    public string HariIni => DateTime.Now.ToString("dddd, dd MMMM yyyy");
+    public string HariIni => DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"));
 
     [RelayCommand]
     private async Task MasukAsync()

@@ -3,6 +3,8 @@
     <Project Path="src/AbsensiSales.Core/AbsensiSales.Core.csproj" />
     <Project Path="src/AbsensiSales.Face/AbsensiSales.Face.csproj" />
     <Project Path="src/AbsensiSales.HR/AbsensiSales.HR.csproj" />
-    <Project Path="src/AbsensiSales.Mobile/AbsensiSales.Mobile.csproj" />
+    <Project Path="src/AbsensiSales.Mobile/AbsensiSales.Mobile.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
   </Folder>
 </Solution>

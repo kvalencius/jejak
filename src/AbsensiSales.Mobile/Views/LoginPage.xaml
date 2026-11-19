@@ -9,12 +9,21 @@
     Shell.NavBarIsVisible="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24,48,24,32" Spacing="0">
+        <VerticalStackLayout Padding="24,44,24,32" Spacing="0">
 
             <!-- Logo -->
             <HorizontalStackLayout Spacing="10" VerticalOptions="Start">
-                <Border Style="{StaticResource CardBorder}" Padding="8" StrokeShape="RoundRectangle 8" WidthRequest="36" HeightRequest="36">
-                    <Label Text="JS" TextColor="{StaticResource PrimaryDark}" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Border BackgroundColor="{StaticResource Primary}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 11"
+                        WidthRequest="40"
+                        HeightRequest="40">
+                    <Label Text="J"
+                           TextColor="{StaticResource OnPrimary}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="15"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
                 </Border>
                 <Label Text="Jejak Sales" FontSize="18" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
             </HorizontalStackLayout>
@@ -26,52 +35,56 @@
             <Border Style="{StaticResource CardBorder}" Padding="20,24">
                 <VerticalStackLayout Spacing="0">
 
-                <!-- Tab Masuk / Daftar -->
-                <Border Style="{StaticResource CardBorder}" Padding="4" StrokeThickness="0" BackgroundColor="{StaticResource Background}" Margin="0,0,0,20">
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource Surface}" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,10">
-                            <Label Text="Masuk" HorizontalOptions="Center" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" />
-                        </Border>
-                        <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,10">
-                            <Label Text="Daftar" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" />
-                        </Border>
-                    </Grid>
-                </Border>
+                    <!-- Tab Masuk / Daftar -->
+                    <Border Style="{StaticResource SegmentTrack}" Margin="0,0,0,20">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                            <Border Grid.Column="0" Style="{StaticResource SegmentActive}">
+                                <Label Text="Masuk" HorizontalOptions="Center" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" />
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource SegmentInactive}">
+                                <Label Text="Daftar" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                            </Border>
+                        </Grid>
+                    </Border>
 
-                <Label Text="Username" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
-                    <Entry Text="{Binding Username}" Placeholder="username" AutomationId="EntryUsername" />
-                </Border>
+                    <Label Text="Username" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,14">
+                        <Entry Text="{Binding Username}" Placeholder="username" AutomationId="EntryUsername" />
+                    </Border>
 
-                <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,8">
-                    <Entry Text="{Binding Password}" IsPassword="True" Placeholder="--------" AutomationId="EntryPassword" />
-                </Border>
+                    <Label Text="Password" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,8">
+                        <Entry Text="{Binding Password}" IsPassword="True" Placeholder="--------" AutomationId="EntryPassword" />
+                    </Border>
 
-                <Label Text="{Binding PesanError}" TextColor="{StaticResource Danger}" FontSize="13" Margin="0,4,0,0" />
+                    <Label Text="{Binding PesanError}"
+                           TextColor="{StaticResource Danger}"
+                           FontSize="13"
+                           Margin="0,4,0,0"
+                           IsVisible="{Binding PesanError, Converter={StaticResource StringNotEmptyConverter}}" />
 
-                <Button
-                    Text="Masuk >"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding MasukCommand}"
-                    IsEnabled="{Binding SedangMemproses, Converter={StaticResource InvertedBoolConverter}}"
-                    Margin="0,16,0,10"
-                    AutomationId="ButtonLogin" />
+                    <Button
+                        Text="Masuk >"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding MasukCommand}"
+                        IsEnabled="{Binding SedangMemproses, Converter={StaticResource InvertedBoolConverter}}"
+                        Margin="0,16,0,10"
+                        AutomationId="ButtonLogin" />
 
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                    <Label Text="Belum punya akun?" TextColor="{StaticResource TextSecondary}" FontSize="13" />
-                    <Label Text="Daftar sekarang" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" FontSize="13">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BukaRegisterCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </HorizontalStackLayout>
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Label Text="Belum punya akun?" TextColor="{StaticResource TextSecondary}" FontSize="13" />
+                        <Label Text="Daftar sekarang" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" FontSize="13">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BukaRegisterCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
 
                 </VerticalStackLayout>
             </Border>
 
             <!-- Info akun demo -->
-            <Border BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="14" Margin="0,16,0,0">
+            <Border BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="14" Margin="0,16,0,0">
                 <VerticalStackLayout Spacing="4">
                     <Label Text="Akun untuk sales" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" FontSize="13" />
                     <Label Text="Demo: username andi.pratama / password demo123. Akses Admin HRD tersedia di aplikasi desktop." TextColor="{StaticResource TextSecondary}" FontSize="12" />

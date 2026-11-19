@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using AbsensiSales.Core.Models;
 using AbsensiSales.Core.Repositories;
 using AbsensiSales.Core.Services;
@@ -54,7 +55,7 @@ public partial class LaporanViewModel : ObservableObject
             return;
         }
 
-        JudulTanggal = DateTime.Now.ToString("dd MMMM yyyy");
+        JudulTanggal = DateTime.Now.ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
         InfoSales = $"{sales.Nama} - {sales.Nip} / {sales.Wilayah}";
 
         var kunjungan = await _kunjunganRepo.GetBySalesAsync(sales.Id, _session.TanggalHariIni);

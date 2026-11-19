@@ -15,17 +15,17 @@
             <Label Text="Kunjungan - Tahap 5 dari 5" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,12" />
 
             <!-- Status tersimpan -->
-            <Border BackgroundColor="{StaticResource SuccessBg}" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="14" Margin="0,0,0,14" IsVisible="{Binding Tersimpan}">
+            <Border BackgroundColor="{StaticResource SuccessBg}" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="14" Margin="0,0,0,14" IsVisible="{Binding Tersimpan}">
                 <VerticalStackLayout Spacing="4">
                     <Label Text="OK: Data berhasil tersimpan" TextColor="{StaticResource Success}" FontFamily="OpenSansSemibold" FontSize="14" />
-                    <Label Text="Semua bukti lengkap. Kunjungan tercatat di laporan." TextColor="{StaticResource TextSecondary}" FontSize="12" />
-                    <Label Text="{Binding NomorKunjungan, StringFormat='{0}'}" TextColor="{StaticResource TextSecondary}" FontSize="12" />
-                    <Label Text="{Binding WaktuKunjungan}" TextColor="{StaticResource TextSecondary}" FontSize="12" />
+                    <Label Text="Semua bukti lengkap. Kunjungan tercatat di laporan." Style="{StaticResource CaptionLabel}" />
+                    <Label Text="{Binding NomorKunjungan, StringFormat='{0}'}" Style="{StaticResource CaptionLabel}" />
+                    <Label Text="{Binding WaktuKunjungan}" Style="{StaticResource CaptionLabel}" />
                 </VerticalStackLayout>
             </Border>
 
             <!-- Gagal validasi -->
-            <Border BackgroundColor="{StaticResource DangerBg}" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="14" Margin="0,0,0,14" IsVisible="{Binding ValidasiGagal}">
+            <Border BackgroundColor="{StaticResource DangerBg}" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="14" Margin="0,0,0,14" IsVisible="{Binding ValidasiGagal}">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Data belum dapat disimpan" TextColor="{StaticResource Danger}" FontFamily="OpenSansSemibold" FontSize="14" />
                     <Label Text="{Binding PesanGagal}" TextColor="{StaticResource Danger}" FontSize="12" />
@@ -52,40 +52,58 @@
                     <Label Text="Bukti yang diverifikasi" Style="{StaticResource SectionTitle}" />
 
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 18" WidthRequest="34" HeightRequest="34">
-                            <Label Text="GPS" TextColor="{StaticResource PrimaryDark}" HorizontalOptions="Center" VerticalOptions="Center" />
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 18" WidthRequest="36" HeightRequest="36">
+                            <Label Text="GPS" TextColor="{StaticResource PrimaryDark}" FontSize="10" FontFamily="OpenSansSemibold" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Lokasi GPS" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                            <Label Text="Lokasi GPS" Style="{StaticResource CaptionLabel}" />
                             <Label Text="{Binding InfoGps}" FontFamily="OpenSansSemibold" FontSize="13" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="2" Text="OK" TextColor="{StaticResource Success}" FontSize="16" VerticalOptions="Center" />
+                        <Label Grid.Column="2" Text="OK" TextColor="{StaticResource Success}" FontFamily="OpenSansSemibold" FontSize="15" VerticalOptions="Center" />
                     </Grid>
 
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 18" WidthRequest="34" HeightRequest="34">
-                            <Label Text="JAM" TextColor="{StaticResource PrimaryDark}" HorizontalOptions="Center" VerticalOptions="Center" />
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource InfoBg}" StrokeThickness="0" StrokeShape="RoundRectangle 18" WidthRequest="36" HeightRequest="36">
+                            <Label Text="JAM" TextColor="{StaticResource PrimaryDark}" FontSize="10" FontFamily="OpenSansSemibold" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Waktu absensi" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                            <Label Text="Waktu absensi" Style="{StaticResource CaptionLabel}" />
                             <Label Text="{Binding InfoWaktu}" FontFamily="OpenSansSemibold" FontSize="13" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="2" Text="OK" TextColor="{StaticResource Success}" FontSize="16" VerticalOptions="Center" />
+                        <Label Grid.Column="2" Text="OK" TextColor="{StaticResource Success}" FontFamily="OpenSansSemibold" FontSize="15" VerticalOptions="Center" />
                     </Grid>
 
                     <!-- Thumbnail bukti -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
                             <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="90">
-                                <Label Text="WAJAH" FontSize="30" TextColor="{StaticResource TextOnNavy}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Grid>
+                                    <Label Text="WAJAH"
+                                           FontSize="22"
+                                           FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextOnNavy}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding FotoWajahSiap, Converter={StaticResource InvertedBoolConverter}}" />
+                                    <Image Source="{Binding PratinjauWajah}" Aspect="AspectFill" IsVisible="{Binding FotoWajahSiap}" />
+                                </Grid>
                             </Border>
-                            <Label Text="{Binding InfoWajah}" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                            <Label Text="{Binding InfoWajah}" Style="{StaticResource CaptionLabel}" FontSize="11" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1" Spacing="4">
                             <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="90">
-                                <Label Text="TOKO" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Grid>
+                                    <Label Text="TOKO"
+                                           FontSize="22"
+                                           FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextOnNavy}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding FotoTokoSiap, Converter={StaticResource InvertedBoolConverter}}" />
+                                    <Image Source="{Binding PratinjauToko}" Aspect="AspectFill" IsVisible="{Binding FotoTokoSiap}" />
+                                </Grid>
                             </Border>
-                            <Label Text="Foto toko - bukti kunjungan" FontSize="11" TextColor="{StaticResource TextSecondary}" />
+                            <Label Text="Foto toko - bukti kunjungan" Style="{StaticResource CaptionLabel}" FontSize="11" />
                         </VerticalStackLayout>
                     </Grid>
                 </VerticalStackLayout>

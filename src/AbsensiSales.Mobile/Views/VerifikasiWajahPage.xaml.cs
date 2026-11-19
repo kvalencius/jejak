@@ -16,5 +16,25 @@ public partial class VerifikasiWajahPage : ContentPage
     {
         base.OnAppearing();
         _viewModel.OnAppearing();
+
+        // Segarkan status izin saat pengguna kembali dari pengaturan Android.
+        if (Window is not null)
+        {
+            Window.Resumed -= OnWindowResumed;
+            Window.Resumed += OnWindowResumed;
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        if (Window is not null)
+            Window.Resumed -= OnWindowResumed;
+
+        base.OnDisappearing();
+    }
+
+    private async void OnWindowResumed(object? sender, EventArgs e)
+    {
+        await _viewModel.PeriksaIzinSetelahPengaturanAsync();
     }
 }

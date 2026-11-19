@@ -9,12 +9,20 @@ public partial class AbsensiPertamaPage : ContentPage
     public AbsensiPertamaPage(AbsensiPertamaViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = _viewModel = viewModel;
+        BindingContext = viewModel;
+        _viewModel = viewModel;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
         _viewModel.OnAppearing();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        // Hentikan timer saat keluar dari halaman ini
+        _viewModel.OnDisappearing();
     }
 }

@@ -57,6 +57,18 @@ public partial class VerifikasiDataViewModel : ObservableObject
     private string _infoWajah = string.Empty;
 
     [ObservableProperty]
+    private ImageSource? _pratinjauWajah;
+
+    [ObservableProperty]
+    private bool _fotoWajahSiap;
+
+    [ObservableProperty]
+    private ImageSource? _pratinjauToko;
+
+    [ObservableProperty]
+    private bool _fotoTokoSiap;
+
+    [ObservableProperty]
     private bool _validasiGagal;
 
     [ObservableProperty]
@@ -119,6 +131,20 @@ public partial class VerifikasiDataViewModel : ObservableObject
         InfoGps = $"GPS sesuai - Jarak {_flow.JarakMeter:F0} m\n{_flow.Latitude:F4}, {_flow.Longitude:F4} - +/-8 m";
         InfoWaktu = $"Absensi pertama {_flow.WaktuAbsensiAwal} WIB";
         InfoWajah = $"Wajah cocok - {_flow.WaktuVerifikasiWajah}";
+
+        var fotoWajah = _flow.FotoWajah;
+        if (fotoWajah is { Length: > 0 })
+        {
+            PratinjauWajah = ImageSource.FromStream(() => new MemoryStream(fotoWajah));
+            FotoWajahSiap = true;
+        }
+
+        var fotoToko = _flow.FotoBukti;
+        if (fotoToko is { Length: > 0 })
+        {
+            PratinjauToko = ImageSource.FromStream(() => new MemoryStream(fotoToko));
+            FotoTokoSiap = true;
+        }
     }
 
     [RelayCommand]

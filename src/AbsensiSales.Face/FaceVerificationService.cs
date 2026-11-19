@@ -96,36 +96,66 @@ public class FaceVerificationService : IDisposable
             if (frame.Empty())
                 return Simulasi(namaSales);
 
-            var faces = DeteksiWajah(frame);
-            if (faces.Length == 0)
-                return new FaceVerifyResult(false, 0, "Wajah tidak terdeteksi. Coba posisikan wajah di dalam bingkai.", false);
-
-            var utama = faces.OrderByDescending(r => r.Width * r.Height).First();
-            var embedding = _embedder.GetEmbedding(frame, utama);
-
-            string namaTerbaik = "";
-            double skorTerbaik = -1;
-            foreach (var (nama, refEmbedding) in _referensi)
-            {
-                double skor = FaceEmbedder.CosineSimilarity(embedding, refEmbedding);
-                if (skor > skorTerbaik)
-                {
-                    skorTerbaik = skor;
-                    namaTerbaik = nama;
-                }
-            }
-
-            bool cocok = skorTerbaik >= MatchThreshold
-                && namaTerbaik.Contains(namaSales.Split(' ')[0], StringComparison.OrdinalIgnoreCase);
-
-            return cocok
-                ? new FaceVerifyResult(true, skorTerbaik, $"Wajah cocok dengan {namaTerbaik}.", false)
-                : new FaceVerifyResult(false, skorTerbaik, "Wajah tidak cocok dengan data referensi.", false);
+            return VerifikasiFrame(frame, namaSales);
         }
         catch
         {
             return Simulasi(namaSales);
         }
+    }
+
+    /// <summary>
+    /// Verifikasi wajah dari file foto (mis. hasil kamera perangkat Android/Windows).
+    /// </summary>
+    public FaceVerifyResult VerifikasiDariGambar(string namaSales, string imagePath)
+    {
+        Inisialisasi();
+
+        if (!_siap || _embedder is null || _cascade is null)
+            return Simulasi(namaSales);
+
+        try
+        {
+            using var frame = Cv2.ImRead(imagePath, ImreadModes.Color);
+            if (frame.Empty())
+                return new FaceVerifyResult(false, 0,
+                    "Foto wajah tidak dapat dibaca. Silakan ambil ulang.", false);
+
+            return VerifikasiFrame(frame, namaSales);
+        }
+        catch
+        {
+            return Simulasi(namaSales);
+        }
+    }
+
+    private FaceVerifyResult VerifikasiFrame(Mat frame, string namaSales)
+    {
+        var faces = DeteksiWajah(frame);
+        if (faces.Length == 0)
+            return new FaceVerifyResult(false, 0, "Wajah tidak terdeteksi. Coba posisikan wajah di dalam bingkai.", false);
+
+        var utama = faces.OrderByDescending(r => r.Width * r.Height).First();
+        var embedding = _embedder!.GetEmbedding(frame, utama);
+
+        string namaTerbaik = "";
+        double skorTerbaik = -1;
+        foreach (var (nama, refEmbedding) in _referensi)
+        {
+            double skor = FaceEmbedder.CosineSimilarity(embedding, refEmbedding);
+            if (skor > skorTerbaik)
+            {
+                skorTerbaik = skor;
+                namaTerbaik = nama;
+            }
+        }
+
+        bool cocok = skorTerbaik >= MatchThreshold
+            && namaTerbaik.Contains(namaSales.Split(' ')[0], StringComparison.OrdinalIgnoreCase);
+
+        return cocok
+            ? new FaceVerifyResult(true, skorTerbaik, $"Wajah cocok dengan {namaTerbaik}.", false)
+            : new FaceVerifyResult(false, skorTerbaik, "Wajah tidak cocok dengan data referensi.", false);
     }
 
     private static FaceVerifyResult Simulasi(string namaSales)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AbsensiSales.Mobile.Views.StatusPermohonanPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -14,18 +14,24 @@
             <Label Text="Status permohonan" Style="{StaticResource TitleLabel}" Margin="0,0,0,4" />
             <Label Text="{Binding InfoSales}" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,14" />
 
-            <Label Text="Belum ada permohonan." Style="{StaticResource SubtitleLabel}" IsVisible="{Binding Kosong}" Margin="0,0,0,10" />
+            <!-- Empty state -->
+            <Border Style="{StaticResource CardBorder}" IsVisible="{Binding Kosong}" Margin="0,0,0,10">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Belum ada permohonan" Style="{StaticResource SectionTitle}" />
+                    <Label Text="Pengajuan cuti atau izin sakit yang Anda kirim akan muncul di sini beserta status persetujuannya." Style="{StaticResource SubtitleLabel}" />
+                </VerticalStackLayout>
+            </Border>
 
             <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding DaftarPermohonan}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:PermohonanItemViewModel">
                         <Border Style="{StaticResource CardBorder}">
                             <VerticalStackLayout Spacing="6">
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0" Text="{Binding Jenis}" FontFamily="OpenSansSemibold" FontSize="15" />
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <Label Grid.Column="0" Text="{Binding Jenis}" FontFamily="OpenSansSemibold" FontSize="15" LineBreakMode="TailTruncation" />
                                     <Label Grid.Column="1" Text="{Binding Status}" Style="{StaticResource BadgeWarning}" />
                                 </Grid>
-                                <Label Text="{Binding Periode}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                                <Label Text="{Binding Periode}" Style="{StaticResource CaptionLabel}" />
                                 <Label Text="{Binding Alasan}" FontSize="13" />
                                 <Label Text="{Binding Diajukan, StringFormat='Diajukan {0}'}" FontSize="11" TextColor="{StaticResource TextSecondary}" />
                             </VerticalStackLayout>

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using AbsensiSales.Core.Models;
 using AbsensiSales.Core.Repositories;
 using AbsensiSales.Mobile.Services;
@@ -24,17 +25,6 @@ public partial class PengisianTokoViewModel : ObservableObject
 
     [ObservableProperty]
     private Toko? _tokoTerpilih;
-
-    [ObservableProperty]
-    private string _tujuanKunjungan = "Penawaran & pemesanan produk";
-
-    public string[] PilihanTujuan { get; } =
-    {
-        "Penawaran & pemesanan produk",
-        "Kunjungan rutin",
-        "Pengecekan stok",
-        "Penagihan"
-    };
 
     [ObservableProperty]
     private string _catatan = string.Empty;
@@ -66,7 +56,7 @@ public partial class PengisianTokoViewModel : ObservableObject
             ? DateTime.Now.ToString("HH:mm:ss")
             : _flow.WaktuAbsensiAwal;
 
-        WaktuPengisian = DateTime.Now.ToString("dd MMM yyyy - HH.mm.ss 'WIB'");
+        WaktuPengisian = DateTime.Now.ToString("dd MMM yyyy - HH.mm.ss 'WIB'", new CultureInfo("id-ID"));
 
         if (DaftarToko.Count == 0)
         {
@@ -141,7 +131,7 @@ public partial class PengisianTokoViewModel : ObservableObject
             return;
         }
 
-        _flow.TujuanKunjungan = TujuanKunjungan;
+        
         _flow.Catatan = Catatan;
 
         await Shell.Current.GoToAsync("verifikasi-wajah");

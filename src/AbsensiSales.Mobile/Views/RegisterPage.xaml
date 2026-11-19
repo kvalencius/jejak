@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AbsensiSales.Mobile.Views.RegisterPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -17,30 +17,35 @@
             <Border Style="{StaticResource CardBorder}" Padding="20,24">
                 <VerticalStackLayout Spacing="0">
 
-                <Label Text="Nama lengkap" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
-                    <Entry Text="{Binding Nama}" Placeholder="Nama lengkap" />
-                </Border>
+                    <Label Text="Nama lengkap" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,14">
+                        <Entry Text="{Binding Nama}" Placeholder="Nama lengkap" />
+                    </Border>
 
-                <Label Text="NIP / ID Sales" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
-                    <Entry Text="{Binding Nip}" Placeholder="SLS-000" />
-                </Border>
+                    <Label Text="NIP / ID Sales" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,14">
+                        <Entry Text="{Binding Nip}" Placeholder="SLS-000" />
+                    </Border>
 
-                <Label Text="Username" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,14">
-                    <Entry Text="{Binding Username}" Placeholder="username" />
-                </Border>
+                    <Label Text="Username" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,14">
+                        <Entry Text="{Binding Username}" Placeholder="username" />
+                    </Border>
 
-                <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="13" Margin="0,0,0,6" />
-                <Border Style="{StaticResource CardBorder}" Padding="12,0" Margin="0,0,0,8">
-                    <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Minimal 6 karakter" />
-                </Border>
+                    <Label Text="Password" Style="{StaticResource FieldLabel}" Margin="0,0,0,6" />
+                    <Border Style="{StaticResource InputCard}" Margin="0,0,0,8">
+                        <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Minimal 6 karakter" />
+                    </Border>
 
-                <Label Text="{Binding PesanError}" TextColor="{StaticResource Danger}" FontSize="13" Margin="0,8,0,0" />
+                    <Label Text="{Binding PesanError}"
+                           TextColor="{StaticResource Danger}"
+                           FontSize="13"
+                           Margin="0,8,0,0"
+                           IsVisible="{Binding PesanError, Converter={StaticResource StringNotEmptyConverter}}" />
 
-                <Button Text="Daftar >" Style="{StaticResource PrimaryButton}" Command="{Binding DaftarCommand}" Margin="0,16,0,10" />
-                <Button Text="Kembali" Style="{StaticResource GhostButton}" Command="{Binding KembaliCommand}" />
+                    <Button Text="Daftar >" Style="{StaticResource PrimaryButton}" Command="{Binding DaftarCommand}" Margin="0,16,0,10" />
+                    <Button Text="Kembali" Style="{StaticResource GhostButton}" Command="{Binding KembaliCommand}" />
+
                 </VerticalStackLayout>
             </Border>
 

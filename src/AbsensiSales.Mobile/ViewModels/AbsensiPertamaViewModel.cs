@@ -1,9 +1,12 @@
+using System.Globalization;
 using AbsensiSales.Core.Models;
 using AbsensiSales.Core.Repositories;
 using AbsensiSales.Core.Services;
 using AbsensiSales.Mobile.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+// Tambahkan ini jika belum ada (biasanya sudah ada bawaan MAUI)
+using Microsoft.Maui.Dispatching;
 
 namespace AbsensiSales.Mobile.ViewModels;
 
@@ -14,6 +17,10 @@ public partial class AbsensiPertamaViewModel : ObservableObject
     private readonly SessionService _session;
     private readonly KunjunganRepository _kunjunganRepo;
     private readonly GpsService _gps;
+    private readonly AbsensiFlowState _flow;
+
+    // 1. Tambahkan variabel untuk Timer
+    private IDispatcherTimer _clockTimer;
 
     public AbsensiPertamaViewModel(
         SessionService session,
@@ -26,8 +33,6 @@ public partial class AbsensiPertamaViewModel : ObservableObject
         _gps = gps;
         _flow = flowState;
     }
-
-    private readonly AbsensiFlowState _flow;
 
     [ObservableProperty]
     private string _namaSales = string.Empty;
@@ -83,8 +88,13 @@ public partial class AbsensiPertamaViewModel : ObservableObject
 
         NamaSales = sales.Nama;
         InfoSales = $"{sales.Nip} - {sales.Wilayah}";
-        TanggalManusia = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+        TanggalManusia = DateTime.Now.ToString("dddd, dd MMMM yyyy", new CultureInfo("id-ID"));
+
+        // Update waktu pertama kali buka
         WaktuSekarang = DateTime.Now.ToString("HH:mm:ss");
+
+        // 2. Inisialisasi dan jalankan Timer
+        MulaiJamDigital();
 
         KunjunganTercatat = await _kunjunganRepo.HitungKunjunganHariIniAsync(
             sales.Id, _session.TanggalHariIni);
@@ -93,12 +103,60 @@ public partial class AbsensiPertamaViewModel : ObservableObject
             ? $"Tercatat - pukul {WaktuSekarang}"
             : "Belum absen";
 
-        // Pastikan flow baru dimulai dengan bersih
         if (_flow.KunjunganId == 0 && _flow.TokoTerpilih is null)
         {
             _flow.WaktuAbsensiAwal = WaktuSekarang;
             _flow.Tanggal = _session.TanggalHariIni;
         }
+    }
+
+    // 3. Method untuk menghentikan timer (Panggil ini di halaman .xaml.cs saat OnDisappearing)
+    public void OnDisappearing()
+    {
+        if (_clockTimer is not null && _clockTimer.IsRunning)
+        {
+            _clockTimer.Stop();
+        }
+    }
+
+    private void MulaiJamDigital()
+    {
+        // Hindari membuat timer ganda jika OnAppearing dipanggil berkali-kali
+        if (_clockTimer is null)
+        {
+            // Buat timer yang berjalan di UI Thread bawaan MAUI
+            _clockTimer = Application.Current.Dispatcher.CreateTimer();
+            _clockTimer.Interval = TimeSpan.FromSeconds(1); // Update setiap 1 detik
+            _clockTimer.Tick += (s, e) =>
+            {
+                // Nilai ini akan otomatis meng-update UI karena memakai [ObservableProperty]
+                WaktuSekarang = DateTime.Now.ToString("HH:mm:ss");
+            };
+        }
+
+        if (!_clockTimer.IsRunning)
+        {
+            _clockTimer.Start();
+        }
+    }
+
+    [RelayCommand]
+    private async Task KeluarAsync()
+    {
+        var yakin = await Shell.Current.DisplayAlertAsync(
+            "Keluar dari akun?",
+            "Anda akan kembali ke halaman login.",
+            "Keluar",
+            "Batal");
+
+        if (!yakin)
+            return;
+
+        OnDisappearing();
+        _session.Logout();
+        _flow.Reset();
+
+        await Shell.Current.GoToAsync("//login");
     }
 
     [RelayCommand]
