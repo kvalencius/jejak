@@ -29,8 +29,12 @@ public class AbsensiFlowState
 
     public int KunjunganId { get; set; }
 
+    /// <summary>Nomor absensi/kunjungan hari ini (1-8) untuk kunjungan yang sedang berjalan.</summary>
+    public int NomorAbsensi { get; set; }
+
     public void Reset()
     {
+        NomorAbsensi = 0;
         TokoTerpilih = null;
         TujuanKunjungan = string.Empty;
         Catatan = string.Empty;

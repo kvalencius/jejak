@@ -3,7 +3,8 @@
  * login.php — POST { "email": "...", "password": "..." }
  *
  * Body yang diterima:
- *   email     (wajib) — boleh juga dikirim sebagai "username"/"identifier"
+ *   email     (wajib) — boleh diisi email, nomor telepon,
+ *                        atau dikirim sebagai "username"/"identifier"
  *   password  (wajib)
  *
  * Response sukses:
@@ -34,23 +35,25 @@ $identifier = ambil($data, 'email')
 $password = ambil($data, 'password');
 
 if ($identifier === null || $identifier === '' || $password === null || $password === '') {
-    gagal('Email/username dan password wajib diisi.', 'MISSING_CREDENTIALS', 400);
+    gagal('Email/no. telp dan password wajib diisi.', 'MISSING_CREDENTIALS', 400);
 }
 
 $kolomPengguna = kolomTabel($pdo, 'tbl_pengguna');
-$selectWilayah = in_array('wilayah', $kolomPengguna, true) ? 'wilayah' : 'NULL AS wilayah';
+$selectWilayah = in_array('wilayah', $kolomPengguna, true) ? 'p.wilayah' : 'NULL AS wilayah';
 
 $stmt = $pdo->prepare(
-    "SELECT id_pengguna, nama, email, password_hash, role, {$selectWilayah}
-     FROM tbl_pengguna
-     WHERE email = ? OR nama = ? OR SUBSTRING_INDEX(email, '@', 1) = ?
+    "SELECT p.id_pengguna, p.nama, p.email, p.password_hash, p.role, {$selectWilayah}
+     FROM tbl_pengguna p
+     LEFT JOIN tbl_sales s ON s.id_pengguna = p.id_pengguna
+     WHERE p.email = ? OR p.nama = ?
+        OR SUBSTRING_INDEX(p.email, '@', 1) = ? OR s.nomor_telepon = ?
      LIMIT 1"
 );
-$stmt->execute([$identifier, $identifier, $identifier]);
+$stmt->execute([$identifier, $identifier, $identifier, $identifier]);
 $user = $stmt->fetch();
 
 if (!$user || !password_verify((string)$password, (string)$user['password_hash'])) {
-    gagal('Email/username atau password salah.', 'INVALID_CREDENTIALS', 401);
+    gagal('Email/no. telp atau password salah.', 'INVALID_CREDENTIALS', 401);
 }
 
 $idPengguna = (int)$user['id_pengguna'];

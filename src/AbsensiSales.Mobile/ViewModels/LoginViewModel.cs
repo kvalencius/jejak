@@ -51,7 +51,7 @@ public partial class LoginViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
-            await _notif.ShowErrorAsync("Email/username dan password wajib diisi.");
+            await _notif.ShowErrorAsync("Email/no. telp dan password wajib diisi.");
             return;
         }
 

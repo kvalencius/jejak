@@ -161,6 +161,13 @@ public partial class VerifikasiDataViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task AbsensiBerikutnyaAsync()
+    {
+        _flow.Reset();
+        await Shell.Current.GoToAsync("//utama/absensi");
+    }
+
+    [RelayCommand]
     private async Task KembaliKeTokoAsync()
     {
         _flow.Reset();

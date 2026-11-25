@@ -12,49 +12,67 @@
 
     <Grid>
         <ScrollView>
-            <VerticalStackLayout Padding="24,44,24,32" Spacing="0">
+            <VerticalStackLayout Padding="24,44,24,32"
+                    Spacing="0">
 
                 <!-- Logo -->
-                <HorizontalStackLayout Spacing="10" VerticalOptions="Start">
-                    <Image Source="logo_jejak.png" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />
-                    <VerticalStackLayout Spacing="0" VerticalOptions="Center">
-                        <Label Text="Jejak Sales" FontSize="17" FontFamily="OpenSansSemibold" />
-                        <Label Text="Absensi kunjungan sales" FontSize="10" TextColor="{StaticResource TextSecondary}" />
+                <HorizontalStackLayout Spacing="10"
+                        HorizontalOptions="Center">
+                    <VerticalStackLayout Spacing="0"
+                            VerticalOptions="Center">
+                        <Image Source="logo_jejak.png"
+                            WidthRequest="80"
+                            HeightRequest="80"
+                            Aspect="AspectFit"
+                            Margin="0,0,0,10"/>
+                        <Label Text="Jejak"
+                                FontSize="30"
+                                FontFamily="InterBold"/>
+                        <Label Text="Absensi kunjungan sales"
+                                FontSize="12"
+                                TextColor="{StaticResource TextSecondary}"/>
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
 
-                <Label Text="Selamat datang kembali" Style="{StaticResource TitleLabel}" Margin="0,30,0,6" />
-                <Label Text="Masuk untuk mencatat absensi, kunjungan toko, dan laporan harian Anda." Style="{StaticResource SubtitleLabel}" Margin="0,0,0,24" />
+                <BoxView HeightRequest="20" />
 
+                <Label Text="Selamat datang!"
+                        Style="{StaticResource TitleLabel}"
+                        Margin="10,30,0,6"
+                        FontSize="18"/>
+                
                 <!-- Card login -->
-                <controls:SolidCard Tone="White" Padding="20,22">
+                <controls:SolidCard Tone="White"
+                        Padding="20,22">
                     <VerticalStackLayout Spacing="0">
-
-                        <!-- Tab Masuk / Daftar -->
-                        <controls:SolidCard Tone="Yellow" Padding="4" Margin="0,0,0,20" StrokeShape="RoundRectangle 14">
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
-                                <Border Grid.Column="0" BackgroundColor="{StaticResource White}" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,10">
-                                    <Label Text="Masuk" HorizontalOptions="Center" TextColor="{StaticResource Navy}" FontFamily="OpenSansSemibold" FontSize="13" />
-                                </Border>
-                                <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,10">
-                                    <Label Text="Daftar" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" FontSize="13">
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding BukaRegisterCommand}" />
-                                        </Label.GestureRecognizers>
-                                    </Label>
-                                </Border>
-                            </Grid>
+                        <Label Text="Email / No. Telp"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="12"
+                                Margin="0,0,0,6"/>
+                        <controls:SolidCard Tone="White"
+                                Padding="12,0"
+                                Margin="0,0,0,14"
+                                StrokeShape="RoundRectangle 14">
+                            <Entry Text="{Binding Username}"
+                                    Placeholder="Email atau No. telp"
+                                    AutomationId="EntryUsername"/>
                         </controls:SolidCard>
 
-                        <Label Text="Email / username" FontFamily="OpenSansSemibold" FontSize="12" Margin="0,0,0,6" />
-                        <controls:SolidCard Tone="Yellow" Padding="12,0" Margin="0,0,0,14" StrokeShape="RoundRectangle 14">
-                            <Entry Text="{Binding Username}" Placeholder="email atau username" Keyboard="Email" AutomationId="EntryUsername" />
+                        <Label Text="Password"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="12"
+                                Margin="0,0,0,6"/>
+                        <controls:SolidCard Tone="White"
+                                Padding="12,0"
+                                Margin="0,0,0,4"
+                                StrokeShape="RoundRectangle 14">
+                            <Entry Text="{Binding Password}"
+                                    IsPassword="True"
+                                    Placeholder="Masukkan password anda"
+                                    AutomationId="EntryPassword"/>
                         </controls:SolidCard>
-
-                        <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="12" Margin="0,0,0,6" />
-                        <controls:SolidCard Tone="Yellow" Padding="12,0" Margin="0,0,0,4" StrokeShape="RoundRectangle 14">
-                            <Entry Text="{Binding Password}" IsPassword="True" Placeholder="--------" AutomationId="EntryPassword" />
-                        </controls:SolidCard>
+                        
+                        <BoxView HeightRequest="20" />
 
                         <Button
                             Text="Masuk"
@@ -62,7 +80,7 @@
                             Command="{Binding MasukCommand}"
                             IsEnabled="{Binding SedangMemproses, Converter={StaticResource InvertedBoolConverter}}"
                             Margin="0,16,0,10"
-                            AutomationId="ButtonLogin" />
+                            AutomationId="ButtonLogin"/>
 
                         <Button
                             Text="Tes Koneksi Backend"
@@ -71,27 +89,33 @@
                             IsEnabled="{Binding SedangTesKoneksi, Converter={StaticResource InvertedBoolConverter}}"
                             HeightRequest="46"
                             Margin="0,0,0,8"
-                            AutomationId="ButtonTesKoneksi" />
+                            AutomationId="ButtonTesKoneksi"/>
 
                         <Label
                             Text="{Binding StatusKoneksi}"
                             TextColor="{StaticResource TextSecondary}"
                             FontSize="11"
                             LineBreakMode="WordWrap"
-                            Margin="0,0,0,6" />
+                            Margin="0,0,0,6"/>
 
                         <Label
                             Text="{Binding AlamatBackend, StringFormat='Backend: {0}'}"
                             TextColor="{StaticResource SubtleGray}"
                             FontSize="9"
                             LineBreakMode="CharacterWrap"
-                            Margin="0,0,0,14" />
+                            Margin="0,0,0,14"/>
 
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                            <Label Text="Belum punya akun?" TextColor="{StaticResource TextSecondary}" FontSize="12" />
-                            <Label Text="Daftar sekarang" TextColor="{StaticResource Navy}" FontFamily="OpenSansSemibold" FontSize="12">
+                        <HorizontalStackLayout HorizontalOptions="Center"
+                                Spacing="4">
+                            <Label Text="Belum punya akun?"
+                                    TextColor="{StaticResource TextSecondary}"
+                                    FontSize="12"/>
+                            <Label Text="Daftar sekarang"
+                                    TextColor="{StaticResource Navy}"
+                                    FontFamily="OpenSansSemibold"
+                                    FontSize="12">
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BukaRegisterCommand}" />
+                                    <TapGestureRecognizer Command="{Binding BukaRegisterCommand}"/>
                                 </Label.GestureRecognizers>
                             </Label>
                         </HorizontalStackLayout>
@@ -99,20 +123,16 @@
                     </VerticalStackLayout>
                 </controls:SolidCard>
 
-                <!-- Info akun sales -->
-                <controls:SolidCard Tone="Navy" Padding="14" Margin="0,16,0,0">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Akun untuk sales" TextColor="{StaticResource White}" FontFamily="OpenSansSemibold" FontSize="12" />
-                        <Label Text="Akun sales terdaftar di backend. Akses Admin HRD tersedia di aplikasi desktop." TextColor="{StaticResource White}" FontSize="11" />
-                    </VerticalStackLayout>
-                </controls:SolidCard>
-
-                <Label Text="{Binding HariIni}" HorizontalOptions="Center" TextColor="{StaticResource TextSecondary}" FontSize="11" Margin="0,24,0,0" />
+                <Label Text="{Binding HariIni}"
+                        HorizontalOptions="Center"
+                        TextColor="{StaticResource TextSecondary}"
+                        FontSize="11"
+                        Margin="0,24,0,0"/>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <controls:NotificationHost />
+        <controls:NotificationHost/>
     </Grid>
 </ContentPage>
 

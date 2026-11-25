@@ -79,7 +79,10 @@ public partial class PengisianTokoViewModel : ObservableObject
         if (!_sudahNotifAbsensi)
         {
             _sudahNotifAbsensi = true;
-            await _notif.ShowSuccessAsync($"Absensi pertama tercatat pukul {WaktuAbsensiAwal} WIB.");
+            var pesan = _flow.NomorAbsensi <= 1
+                ? $"Absensi pertama tercatat pukul {WaktuAbsensiAwal} WIB."
+                : $"Kunjungan ke-{_flow.NomorAbsensi} dimulai. Absensi pertama hari ini pukul {WaktuAbsensiAwal} WIB.";
+            await _notif.ShowSuccessAsync(pesan);
         }
 
         await MuatTokoAsync();

@@ -35,7 +35,7 @@
                             VerticalOptions="Center" />
                     </controls:SolidCard>
                     <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                        <Label Text="Jejak Sales" FontSize="16" FontFamily="OpenSansSemibold" />
+                        <Label Text="Jejak Sales" FontSize="16" FontFamily="InterBold" />
                         <Label Text="Ringkasan kunjungan" FontSize="11" TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
                     <Label Grid.Column="2" Text="HARI INI" Style="{StaticResource BadgeInfo}" VerticalOptions="Center" />

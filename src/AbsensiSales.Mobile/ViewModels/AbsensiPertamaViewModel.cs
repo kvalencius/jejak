@@ -85,10 +85,32 @@ public partial class AbsensiPertamaViewModel : ObservableObject
 
     public string LabelProgress => $"{KunjunganTercatat} dari {TargetKunjunganHarian} toko";
 
+    /// <summary>Nomor absensi yang akan dicatat berikutnya (1-8).</summary>
+    public int NomorAbsensi => Math.Min(TargetKunjunganHarian, KunjunganTercatat + 1);
+
+    public bool TargetTercapai => KunjunganTercatat >= TargetKunjunganHarian;
+
+    public bool BisaAbsen => !TargetTercapai;
+
+    public string JudulAbsensi => TargetTercapai
+        ? "Target harian tercapai"
+        : KunjunganTercatat == 0
+            ? "Absensi pertama"
+            : $"Absensi ke-{NomorAbsensi}";
+
+    public string LabelTombol => KunjunganTercatat == 0
+        ? "Catat absensi pertama"
+        : $"Catat absensi ke-{NomorAbsensi}";
+
     partial void OnKunjunganTercatatChanged(int value)
     {
         OnPropertyChanged(nameof(Progress));
         OnPropertyChanged(nameof(LabelProgress));
+        OnPropertyChanged(nameof(NomorAbsensi));
+        OnPropertyChanged(nameof(TargetTercapai));
+        OnPropertyChanged(nameof(BisaAbsen));
+        OnPropertyChanged(nameof(JudulAbsensi));
+        OnPropertyChanged(nameof(LabelTombol));
     }
 
     public async void OnAppearing()
@@ -110,8 +132,9 @@ public partial class AbsensiPertamaViewModel : ObservableObject
 
         await MuatKunjunganHariIniAsync();
 
-        // Pastikan flow baru dimulai dengan bersih
-        if (_flow.KunjunganId == 0 && _flow.TokoTerpilih is null)
+        // Simpan jam absensi pertama hari ini; jangan ditimpa saat kunjungan berikutnya.
+        if (string.IsNullOrWhiteSpace(_flow.WaktuAbsensiAwal)
+            || _flow.Tanggal != _session.TanggalHariIni)
         {
             _flow.WaktuAbsensiAwal = WaktuSekarang;
             _flow.Tanggal = _session.TanggalHariIni;
@@ -227,7 +250,7 @@ public partial class AbsensiPertamaViewModel : ObservableObject
         LabelLokasi = $"GPS +/-{lokasi.AkurasiMeter:F0} m";
         PerbaruiPeta(lokasi.Latitude, lokasi.Longitude, lokasi.AkurasiMeter);
 
-        _flow.WaktuAbsensiAwal = DateTime.Now.ToString("HH:mm:ss");
+        _flow.NomorAbsensi = NomorAbsensi;
         _flow.Tanggal = _session.TanggalHariIni;
         _flow.Latitude = lokasi.Latitude;
         _flow.Longitude = lokasi.Longitude;
