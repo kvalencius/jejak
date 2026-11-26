@@ -8,12 +8,24 @@
     BackgroundColor="{StaticResource Background}"
     Shell.NavBarIsVisible="False">
 
-    <Grid Padding="14" RowDefinitions="*" ColumnDefinitions="280,*" ColumnSpacing="14">
+    <ContentPage.Resources>
+        <!-- Tombol menu ringkas untuk layar HP. -->
+        <Style x:Key="CompactNavItem" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+            <Setter Property="Stroke" Value="{StaticResource BorderNeutral}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
 
-        <!-- Sidebar melayang -->
-        <controls:FloatingCard Grid.Column="0" Style="{StaticResource SidebarCard}">
+    <Grid x:Name="RootGrid" Padding="14" ColumnDefinitions="280,*" ColumnSpacing="14">
+
+        <!-- Sidebar: satu panel -->
+        <controls:FloatingCard x:Name="Sidebar" Grid.Column="0" Style="{StaticResource SidebarCard}">
             <ScrollView>
-                <VerticalStackLayout Spacing="2">
+                <VerticalStackLayout Spacing="6">
 
                     <!-- Logo -->
                     <HorizontalStackLayout Spacing="10" Margin="8,0,0,16">
@@ -23,10 +35,10 @@
                         <Label Text="Jejak Sales" TextColor="{StaticResource TextPrimary}" FontSize="17" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
                     </HorizontalStackLayout>
 
-                    <Label Text="MENU" TextColor="{StaticResource TextSecondary}" FontSize="11" FontFamily="OpenSansSemibold" Margin="12,0,0,6" />
+                    <Label Text="MENU" TextColor="{StaticResource TextSecondary}" FontSize="11" FontFamily="OpenSansSemibold" Margin="12,18,0,6" />
 
                     <!-- Item menu -->
-                    <controls:FloatingCard x:Name="ItemDashboard" Style="{StaticResource MenuItemActive}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemDashboard" Style="{StaticResource MenuItemActive}">
                         <HorizontalStackLayout Spacing="10">
                             <Label x:Name="IkonDashboard" Text="&#xe871;" Style="{StaticResource MenuIcon}" TextColor="{StaticResource OnPrimary}" />
                             <Label x:Name="LabelDashboard" Text="Dashboard" TextColor="{StaticResource OnPrimary}" FontFamily="OpenSansSemibold" FontSize="14" VerticalOptions="Center" />
@@ -36,7 +48,7 @@
                         </controls:FloatingCard.GestureRecognizers>
                     </controls:FloatingCard>
 
-                    <controls:FloatingCard x:Name="ItemAbsensi" Style="{StaticResource MenuItem}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemAbsensi" Style="{StaticResource MenuItem}">
                         <HorizontalStackLayout Spacing="10">
                             <Label Text="&#xf0c5;" Style="{StaticResource MenuIcon}" />
                             <Label x:Name="LabelAbsensi" Text="Absensi" TextColor="{StaticResource TextPrimary}" FontFamily="OpenSansSemibold" FontSize="14" VerticalOptions="Center" />
@@ -46,7 +58,7 @@
                         </controls:FloatingCard.GestureRecognizers>
                     </controls:FloatingCard>
 
-                    <controls:FloatingCard x:Name="ItemLaporan" Style="{StaticResource MenuItem}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemLaporan" Style="{StaticResource MenuItem}">
                         <HorizontalStackLayout Spacing="10">
                             <Label x:Name="IkonLaporan" Text="&#xe873;" Style="{StaticResource MenuIcon}" />
                             <Label x:Name="LabelLaporan" Text="Laporan" TextColor="{StaticResource TextPrimary}" FontSize="14" VerticalOptions="Center" />
@@ -58,7 +70,7 @@
 
                     <Label Text="KEPEGAWAIAN" TextColor="{StaticResource TextSecondary}" FontSize="11" FontFamily="OpenSansSemibold" Margin="12,14,0,6" />
 
-                    <controls:FloatingCard x:Name="ItemApproval" Style="{StaticResource MenuItem}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemApproval" Style="{StaticResource MenuItem}">
                         <HorizontalStackLayout Spacing="10">
                             <Label x:Name="IkonApproval" Text="&#xe614;" Style="{StaticResource MenuIcon}" />
                             <Label x:Name="LabelApproval" Text="Perizinan" TextColor="{StaticResource TextPrimary}" FontSize="14" VerticalOptions="Center" />
@@ -68,7 +80,7 @@
                         </controls:FloatingCard.GestureRecognizers>
                     </controls:FloatingCard>
 
-                    <controls:FloatingCard x:Name="ItemMaster" Style="{StaticResource MenuItem}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemMaster" Style="{StaticResource MenuItem}">
                         <HorizontalStackLayout Spacing="10">
                             <Label x:Name="IkonMaster" Text="&#xe1a1;" Style="{StaticResource MenuIcon}" />
                             <Label x:Name="LabelMaster" Text="Data master" TextColor="{StaticResource TextPrimary}" FontSize="14" VerticalOptions="Center" />
@@ -78,7 +90,7 @@
                         </controls:FloatingCard.GestureRecognizers>
                     </controls:FloatingCard>
 
-                    <controls:FloatingCard x:Name="ItemPayroll" Style="{StaticResource MenuItem}" Margin="0,1">
+                    <controls:FloatingCard x:Name="ItemPayroll" Style="{StaticResource MenuItem}">
                         <HorizontalStackLayout Spacing="10">
                             <Label x:Name="IkonPayroll" Text="&#xef63;" Style="{StaticResource MenuIcon}" />
                             <Label x:Name="LabelPayroll" Text="Payroll" TextColor="{StaticResource TextPrimary}" FontSize="14" VerticalOptions="Center" />
@@ -88,8 +100,8 @@
                         </controls:FloatingCard.GestureRecognizers>
                     </controls:FloatingCard>
 
-                    <!-- Info wilayah -->
-                    <Border BackgroundColor="{StaticResource NavySoft}" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12" Margin="0,14,0,4">
+                    <!-- Info wilayah (tanpa double border) -->
+                    <Border x:Name="InfoWilayah" BackgroundColor="{StaticResource NavySoft}" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12,10" Margin="0,14,0,6">
                         <VerticalStackLayout Spacing="2">
                             <Label Text="WILAYAH PENJUALAN" TextColor="{StaticResource TextSecondary}" FontSize="10" FontFamily="OpenSansSemibold" />
                             <Label Text="Surabaya Pusat" TextColor="{StaticResource TextPrimary}" FontFamily="OpenSansSemibold" FontSize="13" />
@@ -113,21 +125,96 @@
         </controls:FloatingCard>
 
         <!-- Konten -->
-        <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="14">
+        <Grid x:Name="AreaKonten" Grid.Column="1" RowDefinitions="Auto,Auto,*" RowSpacing="0">
 
-            <!-- Top bar melayang -->
-            <controls:FloatingCard Grid.Row="0" Style="{StaticResource TopBarCard}">
-                <Grid ColumnDefinitions="*,Auto" Padding="4,0">
-                    <Label Grid.Column="0" x:Name="LabelBreadcrumb" Text="Operasional / Pemantauan absensi" TextColor="{StaticResource TextSecondary}" FontSize="13" VerticalOptions="Center" />
-                    <HorizontalStackLayout Grid.Column="1" Spacing="12" VerticalOptions="Center">
-                        <Label Text="DATA DEMO" Style="{StaticResource BadgeInfo}" />
+            <!-- Navigasi ringkas: hanya tampil di layar sempit -->
+            <ScrollView x:Name="NavRingkas"
+                        Grid.Row="0"
+                        IsVisible="False"
+                        Margin="0,0,0,8"
+                        Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout Spacing="6">
+                    <Border x:Name="NavDashboard" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xe871;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Dashboard" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuDashboard_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="NavAbsensi" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xf0c5;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Absensi" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuAbsensi_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="NavLaporan" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xe873;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Laporan" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuLaporan_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="NavApproval" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xe614;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Perizinan" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuApproval_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="NavMaster" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xe1a1;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Data master" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuMaster_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border x:Name="NavPayroll" Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xef63;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Payroll" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="MenuPayroll_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Style="{StaticResource CompactNavItem}">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="&#xe9ba;" Style="{StaticResource MenuIcon}" FontSize="16" WidthRequest="18" />
+                            <Label Text="Keluar" FontSize="12" FontFamily="OpenSansSemibold" VerticalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Logout_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <!-- Top bar: header penuh lebar dengan pemisah bawah -->
+            <Grid Grid.Row="1" RowDefinitions="Auto,Auto" BackgroundColor="{StaticResource Surface}" Margin="{OnIdiom Default='0,0,0,14', Phone='0,0,0,8'}">
+                <Grid Padding="18,12" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0" x:Name="LabelBreadcrumb" Text="Operasional / Pemantauan absensi" TextColor="{StaticResource TextSecondary}" FontSize="13" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                    <HorizontalStackLayout x:Name="TopbarInfo" Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                        <Label Text="DATA DEMO" Style="{StaticResource BadgeInfo}" VerticalOptions="Center" />
                         <Label Text="RS - Rina Sari - Admin/HRD" TextColor="{StaticResource TextPrimary}" FontSize="13" VerticalOptions="Center" />
                     </HorizontalStackLayout>
                 </Grid>
-            </controls:FloatingCard>
+                <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource BorderNeutral}" />
+            </Grid>
 
             <!-- Frame halaman -->
-            <Frame x:Name="ContentFrame" Grid.Row="1" Padding="0" HasShadow="False" BackgroundColor="Transparent" />
+            <Frame x:Name="ContentFrame" Grid.Row="2" Padding="0" HasShadow="False" BackgroundColor="Transparent" CornerRadius="0" />
         </Grid>
 
     </Grid>

@@ -9,7 +9,7 @@
     Title="Detail Kunjungan">
 
     <ScrollView>
-        <VerticalStackLayout Padding="28,20" Spacing="0">
+        <VerticalStackLayout Style="{StaticResource PageContainer}">
 
             <Label Text="{Binding Judul}" Style="{StaticResource PageTitle}" Margin="0,0,0,16" />
 
@@ -24,12 +24,19 @@
                         <Label Text="{Binding NamaSales}" FontFamily="OpenSansSemibold" FontSize="16" />
                         <Label Text="{Binding InfoSales}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
-                    <Label Grid.Column="2" Text="{Binding Status}" Style="{StaticResource BadgeSuccess}" VerticalOptions="Center" />
+                    <Label Grid.Column="2"
+                           Text="{Binding Status}"
+                           Style="{StaticResource BadgeBase}"
+                           BackgroundColor="{Binding Status, Converter={StaticResource StatusPermohonanToBackgroundConverter}}"
+                           TextColor="{Binding Status, Converter={StaticResource StatusPermohonanToColorConverter}}"
+                           VerticalOptions="Center" />
                 </Grid>
             </controls:FloatingCard>
 
             <!-- Toko & waktu -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="6" Margin="0,10,0,0">
+            <Grid ColumnDefinitions="{OnIdiom Default='*,*', Phone='*'}"
+                  RowDefinitions="{OnIdiom Default='Auto', Phone='Auto,Auto'}"
+                  ColumnSpacing="6" RowSpacing="6" Margin="0,10,0,0">
                 <controls:FloatingCard Grid.Column="0" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Toko dikunjungi" FontSize="12" TextColor="{StaticResource TextSecondary}" />
@@ -37,7 +44,9 @@
                         <Label Text="{Binding InfoToko}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
                 </controls:FloatingCard>
-                <controls:FloatingCard Grid.Column="1" Style="{StaticResource Card}">
+                <controls:FloatingCard Grid.Column="1"
+                                       Grid.Row="{OnIdiom Default=0, Phone=1}"
+                                       Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Waktu" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                         <Label Text="{Binding WaktuAwal, StringFormat='Absensi awal {0} WIB'}" FontSize="13" />
@@ -65,23 +74,28 @@
             </controls:FloatingCard>
 
             <!-- Bukti foto -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="6" Margin="0,10,0,0">
+            <Grid ColumnDefinitions="{OnIdiom Default='*,*', Phone='*'}"
+                  RowDefinitions="{OnIdiom Default='Auto', Phone='Auto,Auto'}"
+                  ColumnSpacing="6" RowSpacing="6" Margin="0,10,0,0">
                 <controls:FloatingCard Grid.Column="0" Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Bukti wajah" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                         <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="140">
                             <Label Text="WAJAH" FontSize="40" TextColor="{StaticResource TextOnNavy}" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
-                        <Label Text="Wajah terverifikasi" FontSize="12" TextColor="{StaticResource Success}" />
+                        <Label Text="{Binding SkorWajahText}" FontSize="12" TextColor="{StaticResource Success}" />
+                        <Label Text="{Binding WajahStatus}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
                 </controls:FloatingCard>
-                <controls:FloatingCard Grid.Column="1" Style="{StaticResource Card}">
+                <controls:FloatingCard Grid.Column="1"
+                                       Grid.Row="{OnIdiom Default=0, Phone=1}"
+                                       Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Foto toko" FontSize="12" TextColor="{StaticResource TextSecondary}" />
                         <Border BackgroundColor="{StaticResource Navy}" StrokeThickness="0" StrokeShape="RoundRectangle 10" HeightRequest="140">
                             <Label Text="TOKO" FontSize="40" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Border>
-                        <Label Text="Bukti kunjungan toko" FontSize="12" TextColor="{StaticResource Success}" />
+                        <Label Text="{Binding FotoStatus}" FontSize="12" TextColor="{StaticResource Success}" />
                     </VerticalStackLayout>
                 </controls:FloatingCard>
             </Grid>

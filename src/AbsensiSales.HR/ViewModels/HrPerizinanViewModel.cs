@@ -92,7 +92,7 @@ public partial class HrPerizinanViewModel : ObservableObject
         await SimpanStatusAsync(item, nameof(StatusPermohonan.Disetujui));
         PerbaruiRingkasan();
 
-        await Shell.Current.DisplayAlert(
+        await Shell.Current.DisplayAlertAsync(
             "Permohonan disetujui",
             $"Permohonan {item.Jenis} dari {item.NamaSales} telah disetujui.",
             "OK");
@@ -118,7 +118,7 @@ public partial class HrPerizinanViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(alasan))
         {
-            await Shell.Current.DisplayAlert(
+            await Shell.Current.DisplayAlertAsync(
                 "Alasan wajib diisi",
                 "Alasan penolakan tidak boleh kosong.",
                 "OK");
@@ -130,7 +130,7 @@ public partial class HrPerizinanViewModel : ObservableObject
         await SimpanStatusAsync(item, nameof(StatusPermohonan.Ditolak));
         PerbaruiRingkasan();
 
-        await Shell.Current.DisplayAlert(
+        await Shell.Current.DisplayAlertAsync(
             "Permohonan ditolak",
             $"Permohonan {item.Jenis} dari {item.NamaSales} ditolak.",
             "OK");

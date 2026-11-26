@@ -19,23 +19,23 @@
             <controls:FloatingCard Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Nama lengkap" FontFamily="OpenSansSemibold" FontSize="13" />
-                    <Border Style="{StaticResource InputCard}">
-                        <Entry Text="{Binding Nama}" Placeholder="Nama HRD" />
+                    <Border Style="{StaticResource FormInputBorder}">
+                        <Entry x:Name="NamaInput" Text="{Binding Nama}" Placeholder="Nama HRD" />
                     </Border>
 
                     <Label Text="Email" FontFamily="OpenSansSemibold" FontSize="13" />
-                    <Border Style="{StaticResource InputCard}">
-                        <Entry Text="{Binding Email}" Placeholder="hrd@indopelita.id" Keyboard="Email" />
+                    <Border Style="{StaticResource FormInputBorder}">
+                        <Entry x:Name="EmailInput" Text="{Binding Email}" Placeholder="hrd@indopelita.id" Keyboard="Email" />
                     </Border>
 
                     <Label Text="Username" FontFamily="OpenSansSemibold" FontSize="13" />
-                    <Border Style="{StaticResource InputCard}">
-                        <Entry Text="{Binding Username}" Placeholder="username" />
+                    <Border Style="{StaticResource FormInputBorder}">
+                        <Entry x:Name="UsernameInput" Text="{Binding Username}" Placeholder="username" />
                     </Border>
 
                     <Label Text="Password" FontFamily="OpenSansSemibold" FontSize="13" />
-                    <Border Style="{StaticResource InputCard}">
-                        <Entry Text="{Binding Password}" IsPassword="True" Placeholder="Minimal 6 karakter" />
+                    <Border Style="{StaticResource FormInputBorder}">
+                        <Entry x:Name="PasswordInput" Text="{Binding Password}" IsPassword="True" Placeholder="Minimal 6 karakter" />
                     </Border>
 
                     <Button Text="Daftar >" Style="{StaticResource PrimaryButton}" Command="{Binding DaftarCommand}" Margin="0,8,0,4" />

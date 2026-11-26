@@ -39,6 +39,8 @@ public class AppDatabase
 
         await SeedDataAsync(_connection);
         await SeedPermohonanSalesUtamaAsync(_connection);
+        await SeedPermohonanPendingAsync(_connection);
+        await SeedKunjunganAsync(_connection);
         return _connection;
     }
 
@@ -267,6 +269,119 @@ public class AppDatabase
             DiajukanPada = hariIni + " 16:05",
             Status = nameof(StatusPermohonan.Ditolak),
             CatatanHr = "Ditolak, jadwal kunjungan padat dan belum ada pengganti."
+        });
+    }
+
+    /// <summary>
+    /// Memastikan selalu ada minimal 2 permohonan berstatus Pending supaya
+    /// tombol Setujui/Tolak di halaman Perizinan HR bisa diuji, termasuk pada
+    /// file database lama yang sudah terisi data sebelumnya. Idempoten:
+    /// hanya menambah bila jumlah Pending masih kurang dari 2.
+    /// </summary>
+    private static async Task SeedPermohonanPendingAsync(SQLiteAsyncConnection db)
+    {
+        const int targetPending = 2;
+
+        int jumlahPending = await db.Table<Permohonan>()
+            .Where(p => p.Status == nameof(StatusPermohonan.Pending))
+            .CountAsync();
+
+        int kurang = targetPending - jumlahPending;
+        if (kurang <= 0)
+            return;
+
+        var sales = await db.Table<Sales>().OrderBy(s => s.Id).Take(kurang).ToListAsync();
+        if (sales.Count == 0)
+            return;
+
+        var hariIni = DateTime.Now.ToString("yyyy-MM-dd");
+        var contoh = new (string Jenis, string Alasan, string Lampiran)[]
+        {
+            ("Izin Sakit", "Demam, disertai surat dokter.", "surat_dokter.jpg"),
+            ("Cuti", "Acara keluarga di luar kota.", ""),
+            ("Izin", "Keperluan administrasi kependudukan.", ""),
+        };
+
+        for (int i = 0; i < sales.Count && i < kurang; i++)
+        {
+            var (jenis, alasan, lampiran) = contoh[i % contoh.Length];
+            await db.InsertAsync(new Permohonan
+            {
+                SalesId = sales[i].Id,
+                Jenis = jenis,
+                TanggalMulai = hariIni,
+                TanggalSelesai = hariIni,
+                Alasan = alasan,
+                Lampiran = lampiran,
+                DiajukanPada = hariIni + " 08:00",
+                Status = nameof(StatusPermohonan.Pending)
+            });
+        }
+    }
+
+    /// <summary>
+    /// Mengisi contoh kunjungan (Tersimpan, Gagal validasi, Draf) bila tabel
+    /// kunjungan masih kosong, supaya ekspor PDF Laporan dan halaman Detail
+    /// Kunjungan dapat diuji pada database lama. Idempoten.
+    /// </summary>
+    private static async Task SeedKunjunganAsync(SQLiteAsyncConnection db)
+    {
+        if (await db.Table<AbsensiKunjungan>().CountAsync() > 0)
+            return;
+
+        var sales = await db.Table<Sales>().OrderBy(s => s.Id).ToListAsync();
+        var toko = await db.Table<Toko>().OrderBy(t => t.Id).ToListAsync();
+        if (sales.Count == 0 || toko.Count == 0)
+            return;
+
+        var hariIni = DateTime.Now.ToString("yyyy-MM-dd");
+        var sales0 = sales[0];
+        var sales1 = sales.Count > 1 ? sales[1] : sales[0];
+
+        await db.InsertAsync(new AbsensiKunjungan
+        {
+            SalesId = sales0.Id,
+            TokoId = toko[0].Id,
+            Tanggal = hariIni,
+            WaktuAbsensiAwal = "08:00:12",
+            WaktuCatat = "08:06:02",
+            Latitude = toko[0].Latitude,
+            Longitude = toko[0].Longitude,
+            JarakMeter = 8,
+            SkorWajah = 0.98,
+            TujuanKunjungan = "Penawaran & pemesanan produk",
+            Catatan = "Pengecekan stok dan penawaran paket bulan ini.",
+            Status = nameof(StatusKunjungan.Tersimpan)
+        });
+
+        await db.InsertAsync(new AbsensiKunjungan
+        {
+            SalesId = sales1.Id,
+            TokoId = toko[Math.Min(1, toko.Count - 1)].Id,
+            Tanggal = hariIni,
+            WaktuAbsensiAwal = "07:55:08",
+            WaktuCatat = "09:12:03",
+            Latitude = toko[Math.Min(1, toko.Count - 1)].Latitude + 0.002,
+            Longitude = toko[Math.Min(1, toko.Count - 1)].Longitude + 0.002,
+            JarakMeter = 180,
+            SkorWajah = 0.4,
+            TujuanKunjungan = "Kunjungan rutin",
+            Catatan = "",
+            Status = nameof(StatusKunjungan.GagalValidasi)
+        });
+
+        await db.InsertAsync(new AbsensiKunjungan
+        {
+            SalesId = sales0.Id,
+            TokoId = toko[Math.Min(2, toko.Count - 1)].Id,
+            Tanggal = hariIni,
+            WaktuAbsensiAwal = "08:00:12",
+            WaktuCatat = "14:25:00",
+            JarakMeter = 0,
+            SkorWajah = 0,
+            TujuanKunjungan = "",
+            Catatan = "",
+            Status = nameof(StatusKunjungan.Draf)
         });
     }
 }

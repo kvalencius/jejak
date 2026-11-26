@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -23,11 +24,23 @@ public partial class HrRegisterViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(Nama) || string.IsNullOrWhiteSpace(Username)
             || string.IsNullOrWhiteSpace(Password))
         {
-            await Shell.Current.DisplayAlert("Gagal", "Semua kolom wajib diisi.", "OK");
+            await Shell.Current.DisplayAlertAsync("Gagal", "Nama, username, dan password wajib diisi.", "OK");
             return;
         }
 
-        await Shell.Current.DisplayAlert("Berhasil",
+        if (!string.IsNullOrWhiteSpace(Email) && !MailAddress.TryCreate(Email.Trim(), out _))
+        {
+            await Shell.Current.DisplayAlertAsync("Gagal", "Format email tidak valid.", "OK");
+            return;
+        }
+
+        if (Password.Trim().Length < 6)
+        {
+            await Shell.Current.DisplayAlertAsync("Gagal", "Password minimal 6 karakter.", "OK");
+            return;
+        }
+
+        await Shell.Current.DisplayAlertAsync("Berhasil",
             "Akun HR terdaftar (demo). Silakan masuk dengan admin / admin123.", "OK");
         await Shell.Current.GoToAsync("..");
     }

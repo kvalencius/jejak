@@ -14,12 +14,16 @@
     <Color x:Key="Border">#EFE9DC</Color>
     <Color x:Key="BorderSoft">#FFF3C9</Color>
 
+    <!-- Border netral (untuk border card, top bar, input, focus glow) -->
+    <Color x:Key="BorderNeutral">#E6E0D4</Color>
+
     <!-- Aksen utama: kuning pastel -->
     <Color x:Key="Primary">#F3D152</Color>
     <Color x:Key="PrimaryBright">#FED766</Color>
     <Color x:Key="PrimarySoft">#FEF08A</Color>
     <Color x:Key="PrimaryDark">#8A5A00</Color>
     <Color x:Key="OnPrimary">#594100</Color>
+    <Color x:Key="Amber">#D9A528</Color>
 
     <!-- Aksen pendukung (untuk chart / highlight) -->
     <Color x:Key="Yellow">#FED766</Color>
@@ -50,6 +54,9 @@
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
+
+    <!-- Latar gelap transparan untuk dialog/overlay formulir. -->
+    <Color x:Key="OverlayScrim">#A6000000</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
     <SolidColorBrush x:Key="NavyBrush" Color="{StaticResource Navy}" />

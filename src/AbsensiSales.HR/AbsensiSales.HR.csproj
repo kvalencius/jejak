@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Aplikasi desktop HR (MAUI, target Windows) -->
-		<TargetFrameworks>net10.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Aplikasi HR (MAUI): desktop Windows + HP Android.
+		     Kedua TFM dipakai agar tata letak bisa ditinjau di dua ukuran layar. -->
+		<TargetFrameworks>net10.0-windows10.0.19041.0;net10.0-android</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AbsensiSales.HR</RootNamespace>
@@ -21,6 +22,8 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>

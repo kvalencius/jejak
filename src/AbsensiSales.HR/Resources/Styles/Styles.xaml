@@ -49,32 +49,52 @@
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
     </Style>
 
+    <!-- Kontainer isi halaman: padding & jarak antar kartu konsisten -->
+    <Style x:Key="PageContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="4,2,4,24" />
+        <Setter Property="Spacing" Value="12" />
+    </Style>
+
+    <!-- Angka besar pada kartu statistik -->
+    <Style x:Key="StatValue" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="26" />
+    </Style>
+
     <!-- Kartu utama di dalam halaman -->
     <Style x:Key="Card" TargetType="controls:FloatingCard">
         <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
         <Setter Property="Stroke" Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="CornerRadius" Value="16" />
         <Setter Property="Padding" Value="20" />
         <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
-        <Setter Property="ShadowOpacity" Value="0.45" />
-        <Setter Property="ShadowRadius" Value="12" />
-        <Setter Property="ShadowOffset" Value="5" />
+        <Setter Property="ShadowOpacity" Value="0.05" />
+        <Setter Property="ShadowRadius" Value="10" />
+        <Setter Property="ShadowOffset" Value="3" />
+    </Style>
+
+    <!-- Kartu tanpa garis tepi: hanya bayangan lembut agar menyatu dengan latar -->
+    <Style x:Key="SoftCard" TargetType="controls:FloatingCard" BasedOn="{StaticResource Card}">
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="ShadowColor" Value="{StaticResource Navy}" />
+        <Setter Property="ShadowOpacity" Value="0.06" />
     </Style>
 
     <!-- Kartu angka kecil (statistik) -->
     <Style x:Key="StatCard" TargetType="controls:FloatingCard">
         <Setter Property="ControlTemplate" Value="{StaticResource FloatingCardTemplate}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
-        <Setter Property="Stroke" Value="{StaticResource BorderSoft}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="CornerRadius" Value="14" />
         <Setter Property="Padding" Value="18,16" />
         <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
-        <Setter Property="ShadowOpacity" Value="0.4" />
-        <Setter Property="ShadowRadius" Value="12" />
-        <Setter Property="ShadowOffset" Value="5" />
+        <Setter Property="ShadowOpacity" Value="0.05" />
+        <Setter Property="ShadowRadius" Value="10" />
+        <Setter Property="ShadowOffset" Value="3" />
     </Style>
 
     <!-- Panel besar: sidebar & top bar -->
@@ -119,10 +139,11 @@
 
     <Style x:Key="MenuItemActive" TargetType="controls:FloatingCard" BasedOn="{StaticResource MenuItem}">
         <Setter Property="BackgroundColor" Value="{StaticResource PrimaryBright}" />
-        <Setter Property="ShadowColor" Value="{StaticResource ShadowColor}" />
-        <Setter Property="ShadowOpacity" Value="0.65" />
-        <Setter Property="ShadowRadius" Value="10" />
-        <Setter Property="ShadowOffset" Value="4" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <!-- Bayangan dimatikan: warna bayangan hampir putih sehingga tampak
+             seperti garis putih di tepi pill kuning. Radius tetap dipertahankan
+             agar padding kartu sama dengan item lain (tidak melompat). -->
+        <Setter Property="ShadowOpacity" Value="0" />
     </Style>
 
     <Style x:Key="MenuIcon" TargetType="Label">
@@ -166,6 +187,29 @@
         <Setter Property="Padding" Value="12,0" />
     </Style>
 
+    <!-- Border input dengan sorotan amber saat fokus (dipakai MasterData/login) -->
+    <Style x:Key="FormInputBorder" TargetType="Border" BasedOn="{StaticResource InputCard}">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource Amber}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Unfocused">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource BorderNeutral}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
         <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
@@ -205,40 +249,32 @@
         <Setter Property="HeightRequest" Value="36" />
     </Style>
 
-    <Style x:Key="BadgeSuccess" TargetType="Label">
+    <!-- Dasar badge status; warna teks & latar diatur lewat converter/binding -->
+    <Style x:Key="BadgeBase" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BadgeSuccess" TargetType="Label" BasedOn="{StaticResource BadgeBase}">
         <Setter Property="TextColor" Value="{StaticResource Success}" />
         <Setter Property="BackgroundColor" Value="{StaticResource SuccessBg}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="Padding" Value="10,4" />
-        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <Style x:Key="BadgeWarning" TargetType="Label">
+    <Style x:Key="BadgeWarning" TargetType="Label" BasedOn="{StaticResource BadgeBase}">
         <Setter Property="TextColor" Value="{StaticResource Warning}" />
         <Setter Property="BackgroundColor" Value="{StaticResource WarningBg}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="Padding" Value="10,4" />
-        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <Style x:Key="BadgeInfo" TargetType="Label">
+    <Style x:Key="BadgeInfo" TargetType="Label" BasedOn="{StaticResource BadgeBase}">
         <Setter Property="TextColor" Value="{StaticResource PrimaryDark}" />
         <Setter Property="BackgroundColor" Value="{StaticResource InfoBg}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="Padding" Value="10,4" />
-        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <Style x:Key="BadgeDanger" TargetType="Label">
+    <Style x:Key="BadgeDanger" TargetType="Label" BasedOn="{StaticResource BadgeBase}">
         <Setter Property="TextColor" Value="{StaticResource Danger}" />
         <Setter Property="BackgroundColor" Value="{StaticResource DangerBg}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="Padding" Value="10,4" />
-        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <Style x:Key="TableHeader" TargetType="Label">
@@ -272,6 +308,25 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
         <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+    <Style x:Key="PickerFilter" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Kotak berbingkai untuk Picker filter (mis. "Semua status") -->
+    <Style x:Key="PickerFilterBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
+        <Setter Property="Stroke" Value="{StaticResource BorderNeutral}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="HeightRequest" Value="42" />
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
 </ResourceDictionary>

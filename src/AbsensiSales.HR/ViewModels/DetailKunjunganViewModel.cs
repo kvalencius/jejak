@@ -60,6 +60,15 @@ public partial class DetailKunjunganViewModel : ObservableObject
     [ObservableProperty]
     private string _catatan = string.Empty;
 
+    [ObservableProperty]
+    private string _skorWajahText = "Belum ada data wajah";
+
+    [ObservableProperty]
+    private string _wajahStatus = "Belum ada verifikasi wajah";
+
+    [ObservableProperty]
+    private string _fotoStatus = "Belum ada foto toko";
+
     public async Task MuatAsync()
     {
         var kunjungan = await _kunjunganRepo.GetByIdAsync(KunjunganId);
@@ -83,5 +92,22 @@ public partial class DetailKunjunganViewModel : ObservableObject
             ? "-" : kunjungan.TujuanKunjungan;
         Catatan = string.IsNullOrWhiteSpace(kunjungan.Catatan)
             ? "Tidak ada catatan tambahan." : kunjungan.Catatan;
+
+        if (kunjungan.SkorWajah > 0)
+        {
+            SkorWajahText = $"Skor {kunjungan.SkorWajah:F2}";
+            WajahStatus = kunjungan.WajahTerverifikasi
+                ? "Wajah terverifikasi"
+                : "Wajah belum terverifikasi";
+        }
+        else
+        {
+            SkorWajahText = "Belum ada data wajah";
+            WajahStatus = "Belum ada verifikasi wajah";
+        }
+
+        FotoStatus = kunjungan.StatusEnum == StatusKunjungan.Draf
+            ? "Belum ada foto toko"
+            : "Bukti kunjungan toko";
     }
 }

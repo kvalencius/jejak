@@ -11,6 +11,8 @@ public partial class WorkspacePage : ContentPage
     private readonly SessionService _session;
     private readonly IServiceProvider _services;
 
+    private bool? _tataLetakSempit;
+
     public WorkspacePage(HrNavigationService nav, SessionService session, IServiceProvider services)
     {
         InitializeComponent();
@@ -19,6 +21,33 @@ public partial class WorkspacePage : ContentPage
         _services = services;
 
         _nav.Navigated += OnNavigated;
+    }
+
+    /// <summary>
+    /// Di layar sempit (HP) sidebar diganti navigasi ringkas di atas konten,
+    /// sehingga halaman tetap memakai seluruh lebar layar.
+    /// </summary>
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+
+        if (width <= 0)
+            return;
+
+        bool sempit = width < 900;
+
+        if (_tataLetakSempit == sempit)
+            return;
+
+        _tataLetakSempit = sempit;
+
+        Sidebar.IsVisible = !sempit;
+        NavRingkas.IsVisible = sempit;
+        TopbarInfo.IsVisible = !sempit;
+
+        RootGrid.ColumnDefinitions[0].Width = sempit ? new GridLength(0) : new GridLength(280);
+        RootGrid.ColumnSpacing = sempit ? 0 : 14;
+        RootGrid.Padding = new Thickness(sempit ? 8 : 14);
     }
 
     protected override async void OnAppearing()
@@ -73,9 +102,6 @@ public partial class WorkspacePage : ContentPage
                 break;
             case ViewModels.DetailKunjunganViewModel dkvm:
                 _ = dkvm.MuatAsync();
-                break;
-            case ViewModels.ApprovalViewModel avm:
-                _ = avm.MuatAsync();
                 break;
             case ViewModels.MasterDataViewModel vmaster:
                 _ = vmaster.MuatAsync();
@@ -141,7 +167,7 @@ public partial class WorkspacePage : ContentPage
         await Shell.Current.GoToAsync("//login");
     }
 
-    /// <summary>Menandai item menu yang aktif dengan kuning pastel + glow lembut.</summary>
+    /// <summary>Menandai item menu yang aktif dengan satu pill kuning (RoundRectangle 10).</summary>
     private void SorotMenu(FloatingCard aktif)
     {
         var warna = Application.Current!.Resources;
@@ -158,7 +184,7 @@ public partial class WorkspacePage : ContentPage
 
             item.BackgroundColor = dipilih ? latarAktif : Colors.Transparent;
             item.ShadowColor = glowAktif;
-            item.ShadowOpacity = dipilih ? 0.65 : 0;
+            item.ShadowOpacity = 0;
 
             if (item.Content is HorizontalStackLayout baris && baris.Children.Count >= 2)
             {
@@ -167,6 +193,41 @@ public partial class WorkspacePage : ContentPage
                 if (baris.Children[1] is Label teks)
                     teks.TextColor = dipilih ? teksAktif : teksNormal;
             }
+        }
+
+        SorotRingkas(aktif);
+    }
+
+    /// <summary>Menandai tombol aktif pada navigasi ringkas layar HP.</summary>
+    private void SorotRingkas(FloatingCard aktif)
+    {
+        var sumber = Application.Current!.Resources;
+
+        Color latarAktif = (Color)sumber["PrimaryBright"];
+        Color latarNormal = (Color)sumber["Surface"];
+        Color garisNormal = (Color)sumber["BorderNeutral"];
+
+        var peta = new Dictionary<FloatingCard, Border>
+        {
+            [ItemDashboard] = NavDashboard,
+            [ItemAbsensi] = NavAbsensi,
+            [ItemLaporan] = NavLaporan,
+            [ItemApproval] = NavApproval,
+            [ItemMaster] = NavMaster,
+            [ItemPayroll] = NavPayroll
+        };
+
+        foreach (var (item, tombol) in peta)
+        {
+            bool dipilih = ReferenceEquals(item, aktif);
+            tombol.BackgroundColor = dipilih ? latarAktif : latarNormal;
+            tombol.Stroke = dipilih ? Colors.Transparent : garisNormal;
+
+            if (tombol.Content is HorizontalStackLayout baris)
+                foreach (var anak in baris.Children.OfType<Label>())
+                    anak.TextColor = dipilih
+                        ? (Color)sumber["OnPrimary"]
+                        : (Color)sumber["TextPrimary"];
         }
     }
 }

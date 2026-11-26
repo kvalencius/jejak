@@ -11,7 +11,7 @@ public class StatusPermohonanToColorConverter : IValueConverter
         (value as string) switch
         {
             "Approved" or "Disetujui" or "Hadir" or "Tersimpan" => Color.FromArgb("#3F9160"),
-            "Rejected" or "Ditolak" or "Tidak hadir" => Color.FromArgb("#C6402F"),
+            "Rejected" or "Ditolak" or "Tidak hadir" or "Gagal validasi" => Color.FromArgb("#C6402F"),
             _ => Color.FromArgb("#B07C00")
         };
 

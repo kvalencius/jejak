@@ -11,4 +11,8 @@ public partial class SalesMonitorItem
     public required int SalesId { get; init; }
 
     public bool Hadir => Status == "Hadir";
+
+    public string InfoRingkas => string.IsNullOrWhiteSpace(Wilayah)
+        ? Nip
+        : $"{Nip} - {Wilayah}";
 }

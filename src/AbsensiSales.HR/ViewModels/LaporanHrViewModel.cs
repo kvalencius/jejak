@@ -1,28 +1,36 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using AbsensiSales.Core.Models;
 using AbsensiSales.Core.Repositories;
+using AbsensiSales.HR.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 
 namespace AbsensiSales.HR.ViewModels;
 
 public partial class LaporanHrViewModel : ObservableObject
 {
+    private static readonly CultureInfo Indonesia = CultureInfo.GetCultureInfo("id-ID");
+
     private readonly KunjunganRepository _kunjunganRepo;
     private readonly SalesRepository _salesRepo;
     private readonly TokoRepository _tokoRepo;
-    private readonly Services.HrNavigationService _nav;
+    private readonly HrNavigationService _nav;
+    private readonly PdfService _pdfService;
 
     public LaporanHrViewModel(
         KunjunganRepository kunjunganRepo,
         SalesRepository salesRepo,
         TokoRepository tokoRepo,
-        Services.HrNavigationService nav)
+        HrNavigationService nav,
+        PdfService pdfService)
     {
         _kunjunganRepo = kunjunganRepo;
         _salesRepo = salesRepo;
         _tokoRepo = tokoRepo;
         _nav = nav;
+        _pdfService = pdfService;
     }
 
     public ObservableCollection<KunjunganTabelItem> DaftarKunjungan { get; } = new();
@@ -46,6 +54,9 @@ public partial class LaporanHrViewModel : ObservableObject
     private string _jumlahHasil = string.Empty;
 
     [ObservableProperty]
+    private bool _tidakAdaHasil = true;
+
+    [ObservableProperty]
     private string _filterStatus = "Semua status";
 
     public string[] PilihanStatus { get; } =
@@ -57,7 +68,7 @@ public partial class LaporanHrViewModel : ObservableObject
     public async Task MuatAsync()
     {
         var tanggal = DateTime.Now.ToString("yyyy-MM-dd");
-        JudulTanggal = DateTime.Now.ToString("dd MMMM yyyy");
+        JudulTanggal = DateTime.Now.ToString("dd MMMM yyyy", Indonesia);
 
         var semuaKunjungan = await _kunjunganRepo.GetAllAsync(tanggal);
         var semuaSales = await _salesRepo.GetAllAsync();
@@ -75,7 +86,15 @@ public partial class LaporanHrViewModel : ObservableObject
         await IsiTabelAsync(semuaKunjungan);
     }
 
-    partial void OnFilterStatusChanged(string value) => _ = MuatAsync();
+    partial void OnFilterStatusChanged(string value) => _ = TerapkanFilterAsync();
+
+    /// <summary>Filter dijalankan pada data hari ini tanpa memuat ulang statistik.</summary>
+    private async Task TerapkanFilterAsync()
+    {
+        var tanggal = DateTime.Now.ToString("yyyy-MM-dd");
+        var semuaKunjungan = await _kunjunganRepo.GetAllAsync(tanggal);
+        await IsiTabelAsync(semuaKunjungan);
+    }
 
     private async Task IsiTabelAsync(List<AbsensiKunjungan> semua)
     {
@@ -113,6 +132,7 @@ public partial class LaporanHrViewModel : ObservableObject
             });
         }
 
+        TidakAdaHasil = DaftarKunjungan.Count == 0;
         JumlahHasil = $"{DaftarKunjungan.Count} hasil - seluruh waktu dalam WIB";
     }
 
@@ -126,7 +146,35 @@ public partial class LaporanHrViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task EksporAsync() =>
-        await Shell.Current.DisplayAlert("Ekspor laporan",
-            "Laporan diekspor ke Excel/PDF (demo).", "OK");
+    private async Task EksporAsync()
+    {
+        if (DaftarKunjungan.Count == 0)
+        {
+            await Shell.Current.DisplayAlertAsync(
+                "Tidak ada data",
+                "Belum ada kunjungan yang bisa diekspor pada filter ini.",
+                "OK");
+            return;
+        }
+
+        try
+        {
+            var filePath = await _pdfService.BuatLaporanKunjunganAsync(
+                DaftarKunjungan.ToList(),
+                JudulTanggal);
+
+            await Launcher.Default.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(filePath),
+                Title = $"Laporan Kunjungan {JudulTanggal}"
+            });
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlertAsync(
+                "Gagal mengekspor laporan",
+                $"File PDF tidak dapat dibuat atau dibuka.\n\n{ex.Message}",
+                "OK");
+        }
+    }
 }

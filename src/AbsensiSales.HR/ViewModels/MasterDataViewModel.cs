@@ -167,7 +167,7 @@ public partial class MasterDataViewModel : ObservableObject
             IsSalesSelected = true;
             await MuatAsync();
 
-            await Shell.Current.DisplayAlert(
+            await Shell.Current.DisplayAlertAsync(
                 "Sales ditambahkan",
                 $"Akun sales {nama} berhasil ditambahkan.",
                 "OK");
@@ -226,7 +226,7 @@ public partial class MasterDataViewModel : ObservableObject
             IsSalesSelected = false;
             await MuatAsync();
 
-            await Shell.Current.DisplayAlert(
+            await Shell.Current.DisplayAlertAsync(
                 "Toko ditambahkan",
                 $"Toko {nama} dengan radius {radius:F0} m berhasil ditambahkan.",
                 "OK");

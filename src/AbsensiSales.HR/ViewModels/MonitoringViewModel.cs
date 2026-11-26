@@ -60,9 +60,6 @@ public partial class MonitoringViewModel : ObservableObject
                 .Where(k => k.SalesId == s.Id && k.Status == nameof(StatusKunjungan.Tersimpan))
                 .ToList();
 
-            bool hadirHariIni = kunjunganSales.Count > 0
-                || semuaKunjungan.Any(k => k.SalesId == s.Id);
-
             if (kunjunganSales.Count > 0)
                 hadir++;
 
@@ -101,6 +98,6 @@ public partial class MonitoringViewModel : ObservableObject
 
     [RelayCommand]
     private async Task KirimPengingatAsync() =>
-        await Shell.Current.DisplayAlert("Pengingat terkirim",
+        await Shell.Current.DisplayAlertAsync("Pengingat terkirim",
             "Notifikasi pengingat dikirim ke sales yang belum absen (demo).", "OK");
 }

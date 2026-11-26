@@ -39,9 +39,9 @@ public partial class PermohonanItem : ObservableObject
 
     public string StatusText => Status switch
     {
-        "Approved" or "Disetujui" => "Approved",
-        "Rejected" or "Ditolak" => "Rejected",
-        _ => "Pending"
+        "Approved" or "Disetujui" => "Disetujui",
+        "Rejected" or "Ditolak" => "Ditolak",
+        _ => "Menunggu"
     };
 
     public string Inisial => string.IsNullOrWhiteSpace(NamaSales)

@@ -22,6 +22,12 @@ public partial class ApprovalViewModel : ObservableObject
     [ObservableProperty]
     private string _jumlahPending = "0";
 
+    [ObservableProperty]
+    private string _jumlahSelesai = "0";
+
+    [ObservableProperty]
+    private bool _tidakAdaPermohonan = true;
+
     public async Task MuatAsync()
     {
         var semua = await _permohonanRepo.GetAllAsync();
@@ -48,16 +54,17 @@ public partial class ApprovalViewModel : ObservableObject
         }
 
         JumlahPending = semua.Count(p => p.Status == nameof(StatusPermohonan.Pending)).ToString();
+        JumlahSelesai = (semua.Count - int.Parse(JumlahPending)).ToString();
+        TidakAdaPermohonan = DaftarPermohonan.Count == 0;
     }
 
     [RelayCommand]
     private async Task SetujuiAsync(PermohonanItem? item)
     {
-        if (item is null)
+        if (item is null || !item.Pending)
             return;
 
-        var semua = await _permohonanRepo.GetAllAsync();
-        var asli = semua.FirstOrDefault(p => p.Id == item.Id);
+        var asli = await CariAsync(item.Id);
         if (asli is null)
             return;
 
@@ -65,28 +72,61 @@ public partial class ApprovalViewModel : ObservableObject
         asli.CatatanHr = "Disetujui oleh HR.";
         await _permohonanRepo.SaveAsync(asli);
 
-        await Shell.Current.DisplayAlert("Disetujui",
-            $"Permohonan {item.Jenis} dari {item.NamaSales} disetujui.", "OK");
+        await Shell.Current.DisplayAlertAsync(
+            "Permohonan disetujui",
+            $"Permohonan {item.Jenis} dari {item.NamaSales} disetujui.",
+            "OK");
         await MuatAsync();
     }
 
     [RelayCommand]
     private async Task TolakAsync(PermohonanItem? item)
     {
-        if (item is null)
+        if (item is null || !item.Pending)
             return;
 
-        var semua = await _permohonanRepo.GetAllAsync();
-        var asli = semua.FirstOrDefault(p => p.Id == item.Id);
+        var alasan = await Shell.Current.DisplayPromptAsync(
+            "Tolak permohonan",
+            $"Masukkan alasan penolakan untuk {item.NamaSales}:",
+            accept: "Tolak",
+            cancel: "Batal",
+            placeholder: "Contoh: jadwal kunjungan padat dan belum ada pengganti.",
+            maxLength: 250,
+            keyboard: Keyboard.Text);
+
+        if (alasan is null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(alasan))
+        {
+            await Shell.Current.DisplayAlertAsync(
+                "Alasan wajib diisi",
+                "Alasan penolakan tidak boleh kosong.",
+                "OK");
+            return;
+        }
+
+        var asli = await CariAsync(item.Id);
         if (asli is null)
             return;
 
         asli.Status = nameof(StatusPermohonan.Ditolak);
-        asli.CatatanHr = "Ditolak oleh HR.";
+        asli.CatatanHr = alasan.Trim();
         await _permohonanRepo.SaveAsync(asli);
 
-        await Shell.Current.DisplayAlert("Ditolak",
-            $"Permohonan {item.Jenis} dari {item.NamaSales} ditolak.", "OK");
+        await Shell.Current.DisplayAlertAsync(
+            "Permohonan ditolak",
+            $"Permohonan {item.Jenis} dari {item.NamaSales} ditolak.",
+            "OK");
         await MuatAsync();
+    }
+
+    private async Task<Permohonan?> CariAsync(int id)
+    {
+        if (id <= 0)
+            return null;
+
+        var semua = await _permohonanRepo.GetAllAsync();
+        return semua.FirstOrDefault(p => p.Id == id);
     }
 }

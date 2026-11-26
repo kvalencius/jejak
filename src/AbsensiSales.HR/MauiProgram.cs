@@ -21,6 +21,37 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
             });
 
+#if WINDOWS
+        // Hapus border bawaan WinUI TextBox: tidak boleh muncul garis hijau
+        // focus atau border warna bawaan Windows, di dalam Border kustom Entry.
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(
+            nameof(Microsoft.Maui.IEntry.Background),
+            (handler, entry) =>
+            {
+                var textBox = handler.PlatformView as Microsoft.UI.Xaml.Controls.TextBox;
+                if (textBox is not null)
+                {
+                    textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                    textBox.BorderBrush = null;
+                    textBox.Background = null;
+                    textBox.UseSystemFocusVisuals = false;
+                }
+            });
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(
+            nameof(Microsoft.Maui.IEntry.Text),
+            (handler, entry) =>
+            {
+                var textBox = handler.PlatformView as Microsoft.UI.Xaml.Controls.TextBox;
+                if (textBox is not null)
+                {
+                    textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                    textBox.BorderBrush = null;
+                    textBox.Background = null;
+                    textBox.UseSystemFocusVisuals = false;
+                }
+            });
+#endif
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
@@ -45,7 +76,6 @@ public static class MauiProgram
         builder.Services.AddTransient<MonitoringViewModel>();
         builder.Services.AddTransient<LaporanHrViewModel>();
         builder.Services.AddTransient<DetailKunjunganViewModel>();
-        builder.Services.AddTransient<ApprovalViewModel>();
         builder.Services.AddTransient<HrDashboardViewModel>();
         builder.Services.AddTransient<HrPerizinanViewModel>();
         builder.Services.AddTransient<MasterDataViewModel>();
@@ -58,7 +88,6 @@ public static class MauiProgram
         builder.Services.AddTransient<MonitoringPage>();
         builder.Services.AddTransient<LaporanHrPage>();
         builder.Services.AddTransient<DetailKunjunganPage>();
-        builder.Services.AddTransient<ApprovalPage>();
         builder.Services.AddTransient<HrDashboardPage>();
         builder.Services.AddTransient<HrPerizinanPage>();
         builder.Services.AddTransient<MasterDataPage>();

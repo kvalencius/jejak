@@ -10,10 +10,6 @@ namespace AbsensiSales.HR.Services;
 
 public sealed class PdfService
 {
-    private const decimal GajiPokok = 2_500_000m;
-    private const decimal BonusPerKunjungan = 15_000m;
-    private const int HariKerjaBulanan = 22;
-
     private static readonly CultureInfo Indonesia = CultureInfo.GetCultureInfo("id-ID");
 
     static PdfService()
@@ -112,6 +108,93 @@ public sealed class PdfService
         });
     }
 
+    /// <summary>Membuat PDF laporan kunjungan harian untuk halaman Laporan HR.</summary>
+    public Task<string> BuatLaporanKunjunganAsync(
+        IReadOnlyCollection<KunjunganTabelItem> items,
+        string judulTanggal)
+    {
+        var filePath = BuatFilePath("Laporan-Kunjungan", judulTanggal);
+        var rows = items.ToList();
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(28);
+                page.DefaultTextStyle(style => style.FontSize(9).FontColor(Colors.Grey.Darken3));
+
+                page.Header().Element(header =>
+                    TulisHeader(header, "LAPORAN KUNJUNGAN SALES", judulTanggal));
+
+                page.Content().PaddingVertical(16).Column(column =>
+                {
+                    column.Spacing(12);
+
+                    column.Item().Row(row =>
+                    {
+                        row.RelativeItem().Text($"Total kunjungan: {rows.Count}")
+                            .FontSize(10).SemiBold().FontColor(Colors.Grey.Darken4);
+                        row.RelativeItem().AlignRight()
+                            .Text($"Tersimpan: {rows.Count(r => r.Status == "Tersimpan")}  -  Gagal validasi: {rows.Count(r => r.Status == "Gagal validasi")}  -  Draf: {rows.Count(r => r.Status == "Draf")}")
+                            .FontSize(9).FontColor(Colors.Grey.Medium);
+                    });
+
+                    column.Item().Table(table => TulisTabelKunjungan(table, rows));
+                });
+
+                page.Footer().Element(TulisFooter);
+            });
+        });
+
+        return Task.Run(() =>
+        {
+            document.GeneratePdf(filePath);
+            return filePath;
+        });
+    }
+
+    private static void TulisTabelKunjungan(
+        TableDescriptor table,
+        IReadOnlyList<KunjunganTabelItem> rows)
+    {
+        table.ColumnsDefinition(columns =>
+        {
+            columns.RelativeColumn(1.8f);
+            columns.RelativeColumn(0.9f);
+            columns.RelativeColumn(1.8f);
+            columns.RelativeColumn(0.9f);
+            columns.RelativeColumn(0.9f);
+            columns.RelativeColumn(0.9f);
+            columns.RelativeColumn(1.8f);
+            columns.RelativeColumn(0.9f);
+        });
+
+        table.Header(header =>
+        {
+            header.Cell().Element(HeaderCell).Text("Sales");
+            header.Cell().Element(HeaderCell).Text("NIP");
+            header.Cell().Element(HeaderCell).Text("Toko");
+            header.Cell().Element(HeaderCell).Text("Kode");
+            header.Cell().Element(HeaderCell).Text("Absen awal");
+            header.Cell().Element(HeaderCell).Text("Dicatat");
+            header.Cell().Element(HeaderCell).Text("Lokasi GPS");
+            header.Cell().Element(HeaderCell).Text("Status");
+        });
+
+        foreach (var item in rows)
+        {
+            table.Cell().Element(BodyCell).Text(item.NamaSales);
+            table.Cell().Element(BodyCell).Text(item.Nip);
+            table.Cell().Element(BodyCell).Text(item.NamaToko);
+            table.Cell().Element(BodyCell).Text(item.KodeToko);
+            table.Cell().Element(BodyCell).Text(item.WaktuAwal);
+            table.Cell().Element(BodyCell).Text(item.WaktuCatat);
+            table.Cell().Element(BodyCell).Text(item.Lokasi);
+            table.Cell().Element(BodyCell).Text(item.Status);
+        }
+    }
+
     private static void TulisHeader(IContainer container, string judul, string periode)
     {
         container.Column(column =>
@@ -175,9 +258,6 @@ public sealed class PdfService
 
     private static void TulisRincianGaji(TableDescriptor table, PayrollItem item)
     {
-        decimal tunjangan = item.KunjunganToko * BonusPerKunjungan;
-        decimal potongan = item.JumlahIzin * (GajiPokok / HariKerjaBulanan);
-
         table.ColumnsDefinition(columns =>
         {
             columns.RelativeColumn(2.5f);
@@ -189,9 +269,17 @@ public sealed class PdfService
         table.Cell().Element(HeaderCell).Text("Keterangan");
         table.Cell().Element(HeaderCell).AlignRight().Text("Nominal");
 
-        TulisBarisGaji(table, "Gaji Pokok", "Gaji bulanan", Rupiah(GajiPokok));
-        TulisBarisGaji(table, "Tunjangan Kunjungan", $"{item.KunjunganToko} x {Rupiah(BonusPerKunjungan)}", Rupiah(tunjangan));
-        TulisBarisGaji(table, "Potongan Izin", $"{item.JumlahIzin} x {Rupiah(GajiPokok / HariKerjaBulanan)}", $"-{Rupiah(potongan)}");
+        decimal potonganHarian = item.JumlahIzin > 0
+            ? item.PotonganIzin / item.JumlahIzin
+            : 0;
+
+        decimal bonusSatuan = item.KunjunganToko > 0
+            ? item.TunjanganKunjungan / item.KunjunganToko
+            : 0;
+
+        TulisBarisGaji(table, "Gaji Pokok", "Gaji bulanan", Rupiah(item.GajiPokok));
+        TulisBarisGaji(table, "Tunjangan Kunjungan", $"{item.KunjunganToko} x {Rupiah(bonusSatuan)}", Rupiah(item.TunjanganKunjungan));
+        TulisBarisGaji(table, "Potongan Izin", $"{item.JumlahIzin} x {Rupiah(potonganHarian)}", $"-{Rupiah(item.PotonganIzin)}");
     }
 
     private static void TulisBarisGaji(TableDescriptor table, string komponen, string keterangan, string nominal)

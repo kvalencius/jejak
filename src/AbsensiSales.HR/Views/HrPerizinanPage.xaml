@@ -8,7 +8,7 @@
     x:DataType="vm:HrPerizinanViewModel"
     Title="Perizinan HR &amp; Sales">
 
-    <Grid Padding="28,20" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
+    <Grid Padding="{OnIdiom Default='28,20', Phone='16,14'}" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
 
         <!-- Judul halaman -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
@@ -24,29 +24,35 @@
         </Grid>
 
         <!-- Ringkasan -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+        <Grid Grid.Row="1" ColumnDefinitions="{OnIdiom Default='*,*,*,*', Phone='*,*'}"
+              RowDefinitions="{OnIdiom Default='Auto', Phone='Auto,Auto'}"
+              ColumnSpacing="8" RowSpacing="8">
             <controls:FloatingCard Grid.Column="0" Style="{StaticResource StatCard}">
                 <VerticalStackLayout Spacing="3">
                     <Label Text="Total pengajuan" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                    <Label Text="{Binding TotalPerizinan}" FontSize="26" FontFamily="OpenSansSemibold" />
+                    <Label Text="{Binding TotalPerizinan}" FontSize="{OnIdiom Default=26, Phone=22}" FontFamily="OpenSansSemibold" />
                 </VerticalStackLayout>
             </controls:FloatingCard>
             <controls:FloatingCard Grid.Column="1" Style="{StaticResource StatCard}">
                 <VerticalStackLayout Spacing="3">
                     <Label Text="Pending" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                    <Label Text="{Binding JumlahPending}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" />
+                    <Label Text="{Binding JumlahPending}" FontSize="{OnIdiom Default=26, Phone=22}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" />
                 </VerticalStackLayout>
             </controls:FloatingCard>
-            <controls:FloatingCard Grid.Column="2" Style="{StaticResource StatCard}">
+            <controls:FloatingCard Grid.Column="2"
+                                   Grid.Row="{OnIdiom Default=0, Phone=1}"
+                                   Style="{StaticResource StatCard}">
                 <VerticalStackLayout Spacing="3">
-                    <Label Text="Approved" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                    <Label Text="{Binding JumlahDisetujui}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Success}" />
+                    <Label Text="Disetujui" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    <Label Text="{Binding JumlahDisetujui}" FontSize="{OnIdiom Default=26, Phone=22}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Success}" />
                 </VerticalStackLayout>
             </controls:FloatingCard>
-            <controls:FloatingCard Grid.Column="3" Style="{StaticResource StatCard}">
+            <controls:FloatingCard Grid.Column="3"
+                                   Grid.Row="{OnIdiom Default=0, Phone=1}"
+                                   Style="{StaticResource StatCard}">
                 <VerticalStackLayout Spacing="3">
-                    <Label Text="Rejected" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                    <Label Text="{Binding JumlahDitolak}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Danger}" />
+                    <Label Text="Ditolak" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                    <Label Text="{Binding JumlahDitolak}" FontSize="{OnIdiom Default=26, Phone=22}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Danger}" />
                 </VerticalStackLayout>
             </controls:FloatingCard>
         </Grid>
@@ -165,12 +171,12 @@
                                   ColumnSpacing="10"
                                   IsVisible="{Binding Pending}">
                                 <Button Grid.Column="0"
-                                        Text="Approve"
+                                        Text="Setujui"
                                         Style="{StaticResource ApproveButton}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HrPerizinanViewModel}, Mode=FindAncestorBindingContext}, Path=ApproveCommand}"
                                         CommandParameter="{Binding .}" />
                                 <Button Grid.Column="1"
-                                        Text="Reject"
+                                        Text="Tolak"
                                         Style="{StaticResource RejectButton}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HrPerizinanViewModel}, Mode=FindAncestorBindingContext}, Path=RejectCommand}"
                                         CommandParameter="{Binding .}" />
