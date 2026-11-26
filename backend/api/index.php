@@ -20,6 +20,7 @@ sukses([
         'GET  toko.php'     => 'Daftar toko',
         'POST absen.php'    => 'Check-in / check-out',
         'GET  kunjungan.php'=> 'Riwayat kunjungan',
+        'GET/POST wajah.php'=> 'Token wajah milik sales sendiri',
         'GET/POST permohonan.php' => 'Izin / cuti',
         'GET  laporan.php'  => 'Laporan HR',
     ],

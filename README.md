@@ -65,7 +65,7 @@ Bisa juga membuka `AbsensiSales.slnx` di Visual Studio lalu memilih projek yang 
 
 - **URL backend**: atur di `src/AbsensiSales.Core/Api/ApiConfig.cs`.
 - **Koneksi database backend**: isi `backend/api/config.php` sesuai hosting masing-masing.
-- **Model face recognition**: unduh sesuai petunjuk di `models/README.md`. Tanpa model, aplikasi memakai mode simulasi.
+- **Model face recognition**: unduh sesuai petunjuk di `models/README.md`. Wajah tidak bisa diverifikasi tanpa model (tidak ada mode simulasi).
 - **Setup backend & database**: lihat [INTEGRASI_API.md](INTEGRASI_API.md).
 
 ## Struktur Proyek
@@ -74,10 +74,9 @@ Bisa juga membuka `AbsensiSales.slnx` di Visual Studio lalu memilih projek yang 
 AbsensiSales.slnx
 ├── src/
 │   ├── AbsensiSales.Core/     # Model, klien API, session, style
-│   ├── AbsensiSales.Face/     # Verifikasi wajah (OpenCV DNN + model SFace ONNX)
+│   ├── AbsensiSales.Face/     # Verifikasi wajah (UltraFace + SFace, ONNX Runtime)
 │   ├── AbsensiSales.HR/       # Aplikasi desktop HR (MAUI, Windows)
 │   └── AbsensiSales.Mobile/   # Aplikasi mobile sales (MAUI, Windows & Android)
 ├── models/                    # Model face recognition (unduh manual)
-├── reference_faces/           # Foto referensi wajah sales (tidak di-commit)
 └── backend/                   # API PHP + skema MySQL
 ```

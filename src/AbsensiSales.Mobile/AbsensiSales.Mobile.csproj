@@ -32,6 +32,12 @@
 		<MauiImage Update="Resources\Images\logo_jejak.png" BaseSize="120,120" />
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- Model wajah: dipakai langsung sebagai MauiAsset di Android/iOS dan
+		     disalin ke folder output agar bisa dibaca dari Windows.
+		     File .onnx tidak di-commit (lihat .gitignore dan models/README.md). -->
+		<MauiAsset Include="..\..\models\*.onnx" LogicalName="%(Filename)%(Extension)" Condition="Exists('..\..\models\version-RFB-320.onnx')" />
+		<None Include="..\..\models\*.onnx" Link="models\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\models\version-RFB-320.onnx')" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -25,6 +25,7 @@ backend/
 │   ├── toko.php         # daftar toko + CRUD toko (khusus HR)
 │   ├── absen.php        # check-in / check-out
 │   ├── upload.php       # unggah foto bukti kunjungan (Base64 → file)
+│   ├── wajah.php        # token wajah milik sales sendiri (GET/POST)
 │   ├── kunjungan.php    # riwayat kunjungan
 │   ├── permohonan.php   # izin / cuti + approve/reject HR
 │   ├── laporan.php      # laporan HR
@@ -35,7 +36,8 @@ backend/
     ├── 01_schema.sql             # ← import ini di phpMyAdmin
     ├── 02_optional_columns.sql   # opsional (lihat bagian 9)
     ├── 03_seed_demo.sql          # opsional: toko + akun demo
-    └── 04_kolom_admin_hr.sql     # opsional: kolom tambahan panel HR
+    ├── 04_kolom_admin_hr.sql     # opsional: kolom tambahan panel HR
+    └── 07_kolom_wajah.sql        # kolom face_updated_at (token wajah)
 ```
 
 ### Aplikasi MAUI
@@ -537,11 +539,35 @@ yang diterima: JPEG, PNG, WEBP, maksimal 5 MB.
 
 ### 11d. Verifikasi wajah
 
-Verifikasi wajah tetap berjalan lokal memakai model SFace + foto referensi di
-folder `reference_faces/`. Kalau model atau foto referensi belum tersedia,
-`FaceVerificationService` memakai **mode simulasi** (dianggap cocok dengan skor
-tinggi). Ini bukan data dummy dari database, tetapi perlu diperhatikan saat
-sidang/demo: tanpa model, verifikasi tidak benar-benar membandingkan wajah.
+Verifikasi wajah berjalan **sepenuhnya di perangkat** memakai dua model ONNX:
+
+- `version-RFB-320.onnx` (UltraFace) untuk mendeteksi wajah;
+- `face_recognition_sface_2021dec.onnx` (SFace) untuk mengubah wajah menjadi
+  embedding 128 nilai float32.
+
+Foto wajah **tidak pernah** dikirim atau disimpan. Yang disimpan hanya token
+Base64 hasil embedding di `tbl_sales.face_data`, lewat endpoint `wajah.php`.
+
+Pencocokan memakai cosine similarity dengan ambang batas di
+`src/AbsensiSales.Core/Services/FaceScore.cs` (saat ini `0.363`):
+
+| Perbandingan | Skor | Keputusan |
+|---|---|---|
+| Orang sama, foto berbeda | 0,65 – 0,95 | cocok |
+| Orang berbeda | 0,27 – 0,32 | tidak cocok |
+
+**Tidak ada mode simulasi.** Tanpa model, halaman verifikasi menampilkan
+"Model wajah belum tersedia" dan tidak pernah meloloskan absensi. Ini
+disengaja supaya saat demo tidak ada kunjungan yang tercatat dengan skor palsu.
+
+Endpoint terkait (perlu login Sales):
+
+- `GET wajah.php` → `{ terdaftar, face_data, diperbarui }`
+- `POST wajah.php { "action": "simpan", "face_data": "<684 karakter Base64>" }`
+- `POST wajah.php { "action": "hapus" }`
+
+Jalankan `backend/database/07_kolom_wajah.sql` sekali untuk menambah kolom
+`face_updated_at`.
 
 ---
 

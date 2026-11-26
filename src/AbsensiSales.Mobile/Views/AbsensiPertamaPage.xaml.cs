@@ -17,4 +17,10 @@ public partial class AbsensiPertamaPage : ContentPage
         base.OnAppearing();
         _viewModel.OnAppearing();
     }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _viewModel.HentikanJam();
+    }
 }

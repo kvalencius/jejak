@@ -36,6 +36,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Isinya gabungan:
 --   01_schema.sql            -> membuat tabel
 --   02_optional_columns.sql  -> kolom tambahan kunjungan
+--   07_kolom_wajah.sql       -> kolom face_updated_at (token wajah)
 --   04_kolom_admin_hr.sql    -> kolom tambahan panel HR
 --   03_seed_demo.sql         -> 8 toko, 1 kunjungan, 2 permohonan, gaji
 --   05_akun_login.sql        -> akun demo HR + Sales (password diperbarui)
@@ -111,6 +112,7 @@ CREATE TABLE IF NOT EXISTS tbl_sales (
     nomor_sales VARCHAR(50) UNIQUE NOT NULL,
     nomor_telepon VARCHAR(20) UNIQUE NOT NULL,
     face_data TEXT,
+    face_updated_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_sales_pengguna FOREIGN KEY (id_pengguna)
         REFERENCES tbl_pengguna(id_pengguna) ON DELETE CASCADE
@@ -272,6 +274,23 @@ ALTER TABLE tbl_kunjungan
     ADD COLUMN IF NOT EXISTS skor_wajah DECIMAL(5,2) NULL AFTER jarak_meter,
     ADD COLUMN IF NOT EXISTS tujuan_kunjungan VARCHAR(255) NULL AFTER skor_wajah,
     ADD COLUMN IF NOT EXISTS catatan TEXT NULL AFTER tujuan_kunjungan;
+
+
+-- ============================================================
+-- ISI: 07_kolom_wajah.sql
+-- ============================================================
+
+-- ============================================================
+-- 07 — kolom pendukung token wajah
+--
+-- tbl_sales.face_data sudah ada di 01_schema.sql (TEXT, menyimpan
+-- token Base64 hasil model SFace, bukan foto). Bagian ini menambah
+-- waktu pembaruan token agar HR/audit bisa melihat kapan wajah
+-- didaftarkan ulang.
+-- ============================================================
+
+ALTER TABLE tbl_sales
+    ADD COLUMN IF NOT EXISTS face_updated_at DATETIME NULL AFTER face_data;
 
 
 -- ============================================================

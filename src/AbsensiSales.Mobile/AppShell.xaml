@@ -22,6 +22,10 @@
             Title="Laporan"
             ContentTemplate="{DataTemplate views:LaporanPage}"
             Route="laporan" />
+        <ShellContent
+            Title="Profil"
+            ContentTemplate="{DataTemplate views:ProfilPage}"
+            Route="profil" />
     </TabBar>
 
 </Shell>

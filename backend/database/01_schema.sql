@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS tbl_sales (
     nomor_sales VARCHAR(50) UNIQUE NOT NULL,
     nomor_telepon VARCHAR(20) UNIQUE NOT NULL,
     face_data TEXT,
+    face_updated_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_sales_pengguna FOREIGN KEY (id_pengguna)
         REFERENCES tbl_pengguna(id_pengguna) ON DELETE CASCADE

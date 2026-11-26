@@ -48,11 +48,13 @@ public static class MauiProgram
         builder.Services.AddTransient<AbsensiPertamaViewModel>();
         builder.Services.AddTransient<PengisianTokoViewModel>();
         builder.Services.AddTransient<VerifikasiWajahViewModel>();
+        builder.Services.AddTransient<DaftarWajahViewModel>();
         builder.Services.AddTransient<FotoTokoViewModel>();
         builder.Services.AddTransient<VerifikasiDataViewModel>();
         builder.Services.AddTransient<LaporanViewModel>();
         builder.Services.AddTransient<PengajuanIzinViewModel>();
         builder.Services.AddTransient<StatusPermohonanViewModel>();
+        builder.Services.AddTransient<ProfilViewModel>();
 
         // Views
         builder.Services.AddTransient<LoginPage>();
@@ -60,11 +62,13 @@ public static class MauiProgram
         builder.Services.AddTransient<AbsensiPertamaPage>();
         builder.Services.AddTransient<PengisianTokoPage>();
         builder.Services.AddTransient<VerifikasiWajahPage>();
+        builder.Services.AddTransient<DaftarWajahPage>();
         builder.Services.AddTransient<FotoTokoPage>();
         builder.Services.AddTransient<VerifikasiDataPage>();
         builder.Services.AddTransient<LaporanPage>();
         builder.Services.AddTransient<PengajuanIzinPage>();
         builder.Services.AddTransient<StatusPermohonanPage>();
+        builder.Services.AddTransient<ProfilPage>();
 
         return builder.Build();
     }

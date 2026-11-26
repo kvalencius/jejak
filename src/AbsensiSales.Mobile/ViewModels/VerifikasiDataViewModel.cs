@@ -148,16 +148,12 @@ public partial class VerifikasiDataViewModel : ObservableObject
         InfoWaktu =
             $"Check-in {ApiMapper.Jam(data.WaktuCheckin)} WIB - "
             + $"status {ApiMapper.StatusKunjungan(data.StatusVerifikasi)}";
-        InfoWajah = _flow.WajahSimulasi
-            ? $"Mode simulasi (model wajah belum tersedia) - skor {_flow.SkorWajah:F3}"
-            : $"Wajah cocok - skor {_flow.SkorWajah:F3}";
+        InfoWajah = $"Wajah cocok - kemiripan {_flow.SkorWajah:P0}";
 
         await _notif.ShowSuccessAsync(
             data.DalamRadius == false
                 ? "Kunjungan tersimpan, tetapi lokasi Anda di luar radius toko."
-                : _flow.WajahSimulasi
-                    ? "Kunjungan berhasil disimpan (verifikasi wajah masih mode simulasi)."
-                    : "Kunjungan berhasil disimpan.");
+                : "Kunjungan berhasil disimpan.");
     }
 
     [RelayCommand]

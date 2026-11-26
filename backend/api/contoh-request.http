@@ -48,7 +48,31 @@ Authorization: Bearer {{token}}
   "data": "<BASE64_FOTO>"
 }
 
-### 7. Check-in (foto_bukti = nilai "file" dari response upload)
+### 7. Status token wajah (Sales)
+### foto wajah tidak pernah dikirim; server hanya menyimpan token Base64
+GET {{base}}/wajah.php
+Authorization: Bearer {{token}}
+
+### 7a. Simpan token wajah (684 karakter Base64 = 128 float32)
+POST {{base}}/wajah.php
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "action": "simpan",
+  "face_data": "<TOKEN_DARI_APLIKASI>"
+}
+
+### 7b. Hapus token wajah
+POST {{base}}/wajah.php
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "action": "hapus"
+}
+
+### 8. Check-in (foto_bukti = nilai "file" dari response upload)
 POST {{base}}/absen.php
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -64,7 +88,7 @@ Authorization: Bearer {{token}}
   "catatan": "Rak depan"
 }
 
-### 8. Check-out (ganti id_kunjungan)
+### 9. Check-out (ganti id_kunjungan)
 POST {{base}}/absen.php
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -76,11 +100,11 @@ Authorization: Bearer {{token}}
   "longitude_checkout": 112.7399
 }
 
-### 9. Riwayat kunjungan hari ini
+### 10. Riwayat kunjungan hari ini
 GET {{base}}/kunjungan.php?tanggal=2026-11-22
 Authorization: Bearer {{token}}
 
-### 10. Ajukan izin / cuti
+### 11. Ajukan izin / cuti
 POST {{base}}/permohonan.php
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -93,11 +117,11 @@ Authorization: Bearer {{token}}
   "lampiran": "surat_izin.pdf"
 }
 
-### 11. Laporan HR (butuh akun role HR)
+### 12. Laporan HR (butuh akun role HR)
 GET {{base}}/laporan.php?jenis=kunjungan&periode=2026-11
 Authorization: Bearer {{tokenHr}}
 
-### 12. Logout
+### 13. Logout
 POST {{base}}/logout.php
 Authorization: Bearer {{token}}
 
@@ -105,7 +129,7 @@ Authorization: Bearer {{token}}
  * Endpoint khusus HR
  * ============================================================ */
 
-### 13. Login HR -> salin data.token ke @tokenHr
+### 14. Login HR -> salin data.token ke @tokenHr
 POST {{base}}/login.php
 Content-Type: application/json
 
@@ -114,11 +138,11 @@ Content-Type: application/json
   "password": "GANTI_PASSWORD_HR"
 }
 
-### 14. Daftar sales (HR)
+### 15. Daftar sales (HR)
 GET {{base}}/sales.php
 Authorization: Bearer {{tokenHr}}
 
-### 15. Tambah akun sales (HR)
+### 16. Tambah akun sales (HR)
 POST {{base}}/sales.php
 Content-Type: application/json
 Authorization: Bearer {{tokenHr}}
@@ -132,7 +156,7 @@ Authorization: Bearer {{tokenHr}}
   "wilayah": "Surabaya Timur"
 }
 
-### 16. Tambah toko (HR)
+### 17. Tambah toko (HR)
 POST {{base}}/toko.php
 Content-Type: application/json
 Authorization: Bearer {{tokenHr}}
@@ -149,7 +173,7 @@ Authorization: Bearer {{tokenHr}}
   "radius": 100
 }
 
-### 17. Setujui permohonan (HR)
+### 18. Setujui permohonan (HR)
 POST {{base}}/permohonan.php
 Content-Type: application/json
 Authorization: Bearer {{tokenHr}}
@@ -160,11 +184,11 @@ Authorization: Bearer {{tokenHr}}
   "catatan": "Disetujui oleh HR."
 }
 
-### 18. Rekap gaji terhitung (HR)
+### 19. Rekap gaji terhitung (HR)
 GET {{base}}/penggajian.php?periode=2026-11
 Authorization: Bearer {{tokenHr}}
 
-### 19. Proses & simpan rekap gaji (HR)
+### 20. Proses & simpan rekap gaji (HR)
 POST {{base}}/penggajian.php
 Content-Type: application/json
 Authorization: Bearer {{tokenHr}}

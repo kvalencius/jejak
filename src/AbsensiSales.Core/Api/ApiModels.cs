@@ -96,6 +96,37 @@ public sealed class HrDto
     public int IdHr { get; set; }
 }
 
+/* ============================================================
+ * wajah.php — token wajah milik sales sendiri
+ * ============================================================ */
+public sealed class WajahStatusData
+{
+    [JsonPropertyName("terdaftar")]
+    public bool Terdaftar { get; set; }
+
+    /// <summary>Token Base64 (128 float32) atau null bila belum terdaftar.</summary>
+    [JsonPropertyName("face_data")]
+    public string? FaceData { get; set; }
+
+    [JsonPropertyName("diperbarui")]
+    public string? Diperbarui { get; set; }
+}
+
+public sealed class WajahSimpanRequest
+{
+    [JsonPropertyName("action")]
+    public string Action { get; set; } = "simpan";
+
+    [JsonPropertyName("face_data")]
+    public string FaceData { get; set; } = string.Empty;
+}
+
+public sealed class WajahHapusRequest
+{
+    [JsonPropertyName("action")]
+    public string Action { get; set; } = "hapus";
+}
+
 public sealed class LoginData
 {
     [JsonPropertyName("token")]

@@ -16,6 +16,11 @@
     <!-- Biru tua sebagai warna kontras utama -->
     <Color x:Key="Navy">#10243D</Color>
     <Color x:Key="NavyDeep">#0A1929</Color>
+
+    <!-- Navbar bawah: biru tua dibuat agak transparan, dan penanda tab aktif
+         memakai kuning yang lebih tua agar teks putih di atasnya tetap terbaca. -->
+    <Color x:Key="NavyBar">#C410243D</Color>
+    <Color x:Key="GoldTab">#9A6A0B</Color>
     <Color x:Key="NavySoft">#E7EEF7</Color>
     <Color x:Key="NavyMuted">#AFC0D6</Color>
     <Color x:Key="Yellow">#FED766</Color>

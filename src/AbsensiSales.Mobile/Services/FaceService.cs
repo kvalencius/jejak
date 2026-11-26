@@ -3,38 +3,144 @@ using AbsensiSales.Face;
 namespace AbsensiSales.Mobile.Services;
 
 /// <summary>
-/// Singleton layanan verifikasi wajah. Model ONNX ditaruh di folder
-/// "models" di samping executable (lihat README). Jika belum tersedia,
-/// otomatis memakai mode simulasi.
+/// Pintu masuk tunggal ke engine verifikasi wajah untuk aplikasi Mobile.
+///
+/// Model ONNX dimuat sekali (lazy) karena ukurannya besar:
+/// - Windows: folder <c>models</c> di samping executable.
+/// - Android: aset paket aplikasi (Resources/Raw).
+///
+/// Tidak ada mode simulasi. Kalau model tidak tersedia, <see cref="PastikanSiapAsync"/>
+/// mengembalikan false dan pemanggil wajib menampilkan pesan, bukan meloloskan absensi.
 /// </summary>
 public class FaceService : IDisposable
 {
-    private readonly FaceVerificationService _service;
+    private readonly SemaphoreSlim _kunci = new(1, 1);
+    private FaceVerificationService? _service;
 
-    public FaceService()
-    {
-        var baseFolder = AppContext.BaseDirectory;
-        _service = new FaceVerificationService(baseFolder);
-    }
+    /// <summary>True jika engine sudah dimuat dan siap dipakai.</summary>
+    public bool Siap => _service?.EngineSiap == true;
 
-    public bool ModeSimulasi => _service.ModeSimulasi;
-
-    /// <summary>True jika engine UltraFace + SFace berhasil dimuat.</summary>
-    public bool EngineSiap => _service.EngineSiap;
+    /// <summary>Alasan engine belum siap (null jika siap).</summary>
+    public string? Pesan { get; private set; }
 
     /// <summary>
-    /// Alur lama: verifikasi langsung dari webcam dan folder reference_faces.
-    /// Dipertahankan selama halaman verifikasi belum dimigrasikan.
+    /// Muat model bila belum. Aman dipanggil berkali-kali dan dari banyak thread.
+    /// Hasil false berarti verifikasi wajah tidak boleh dijalankan.
     /// </summary>
-    public FaceVerifyResult Verifikasi(string namaSales) =>
-        _service.VerifikasiDariKamera(namaSales);
+    public async Task<bool> PastikanSiapAsync()
+    {
+        if (_service is not null)
+            return _service.EngineSiap;
 
-    /// <summary>Buat template wajah dari foto (JPEG/PNG).</summary>
-    public FaceTemplateResult BuatTemplate(byte[] foto) => _service.BuatTemplate(foto);
+        await _kunci.WaitAsync();
+        try
+        {
+            if (_service is not null)
+                return _service.EngineSiap;
 
-    /// <summary>Verifikasi foto terhadap template Base64 milik sales.</summary>
-    public FaceVerifyResult VerifikasiDenganTemplate(byte[] foto, string template) =>
-        _service.Verifikasi(foto, template);
+            // Membuat InferenceSession untuk model 38 MB butuh waktu;
+            // jalankan di thread latar agar UI tidak membeku.
+            var service = await Task.Run(BuatServiceAsync);
+            _service = service;
+            Pesan = service?.EngineSiap == true
+                ? null
+                : service?.PesanInisialisasi ?? "Model wajah tidak ditemukan di perangkat ini.";
 
-    public void Dispose() => _service.Dispose();
+            return service?.EngineSiap == true;
+        }
+        finally
+        {
+            _kunci.Release();
+        }
+    }
+
+    private async Task<FaceVerificationService?> BuatServiceAsync()
+    {
+        var folder = CariFolderModel();
+        if (folder is not null)
+        {
+            var dariFolder = new FaceVerificationService(folder);
+            dariFolder.Inisialisasi();
+            if (dariFolder.EngineSiap)
+                return dariFolder;
+
+            dariFolder.Dispose();
+        }
+
+        var detektor = await BacaAsetAsync("version-RFB-320.onnx");
+        var sface = await BacaAsetAsync("face_recognition_sface_2021dec.onnx");
+        if (detektor is not null && sface is not null)
+        {
+            var dariAset = new FaceVerificationService(detektor, sface);
+            dariAset.Inisialisasi();
+            return dariAset;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Cari folder yang memiliki kedua model. Dicek di samping executable
+    /// dan di beberapa level di atasnya (saat dijalankan dari folder build).
+    /// </summary>
+    private static string? CariFolderModel()
+    {
+        var kandidat = new List<string> { AppContext.BaseDirectory };
+
+        var naik = new DirectoryInfo(AppContext.BaseDirectory);
+        for (int i = 0; i < 6 && naik?.Parent is not null; i++)
+        {
+            naik = naik.Parent;
+            kandidat.Add(Path.Combine(naik.FullName, "models"));
+        }
+
+        foreach (var folder in kandidat)
+        {
+            var detektor = Path.Combine(folder, "models", "version-RFB-320.onnx");
+            var sface = Path.Combine(folder, "models", "face_recognition_sface_2021dec.onnx");
+            if (File.Exists(detektor) && File.Exists(sface))
+                return folder;
+        }
+
+        return null;
+    }
+
+    private static async Task<byte[]?> BacaAsetAsync(string nama)
+    {
+        try
+        {
+            using var stream = await FileSystem.OpenAppPackageFileAsync(nama);
+            using var buffer = new MemoryStream();
+            await stream.CopyToAsync(buffer);
+            return buffer.ToArray();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Buat token wajah dari foto (JPEG/PNG). Foto tidak disimpan.</summary>
+    public async Task<FaceTemplateResult> BuatTemplateAsync(byte[] foto)
+    {
+        if (!await PastikanSiapAsync())
+            return new FaceTemplateResult(null, 0, Pesan ?? "Engine wajah belum siap.");
+
+        return await Task.Run(() => _service!.BuatTemplate(foto));
+    }
+
+    /// <summary>Verifikasi foto terhadap token wajah tersimpan.</summary>
+    public async Task<FaceVerifyResult> VerifikasiAsync(byte[] foto, string template)
+    {
+        if (!await PastikanSiapAsync())
+            return new FaceVerifyResult(false, 0, Pesan ?? "Engine wajah belum siap.");
+
+        return await Task.Run(() => _service!.Verifikasi(foto, template));
+    }
+
+    public void Dispose()
+    {
+        _service?.Dispose();
+        _kunci.Dispose();
+    }
 }

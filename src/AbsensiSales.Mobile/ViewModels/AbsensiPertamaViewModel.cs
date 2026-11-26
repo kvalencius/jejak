@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Dispatching;
 
 namespace AbsensiSales.Mobile.ViewModels;
 
@@ -22,6 +23,7 @@ public partial class AbsensiPertamaViewModel : ObservableObject
     private double _latitude;
     private double _longitude;
     private double _akurasi;
+    private IDispatcherTimer? _jamTimer;
 
     public AbsensiPertamaViewModel(
         SessionService session,
@@ -36,15 +38,6 @@ public partial class AbsensiPertamaViewModel : ObservableObject
         _notif = notif;
         _flow = flowState;
     }
-
-    [ObservableProperty]
-    private string _namaSales = string.Empty;
-
-    [ObservableProperty]
-    private string _inisial = "?";
-
-    [ObservableProperty]
-    private string _infoSales = string.Empty;
 
     [ObservableProperty]
     private string _waktuSekarang = string.Empty;
@@ -62,7 +55,7 @@ public partial class AbsensiPertamaViewModel : ObservableObject
     private string _alamatLokasi = "Lokasi belum tersedia";
 
     [ObservableProperty]
-    private string _koordinatLokasi = "-";
+    private string _akurasiLokasi = "-";
 
     [ObservableProperty]
     private string _labelLokasi = "Lokasi perangkat";
@@ -122,13 +115,9 @@ public partial class AbsensiPertamaViewModel : ObservableObject
             return;
         }
 
-        NamaSales = sales.Nama;
-        Inisial = sales.Inisial;
-        InfoSales = string.IsNullOrWhiteSpace(sales.Wilayah)
-            ? sales.Nip
-            : $"{sales.Nip} - {sales.Wilayah}";
         TanggalManusia = ApiMapper.Tanggal(DateTime.Now);
         WaktuSekarang = DateTime.Now.ToString("HH:mm:ss");
+        MulaiJam();
 
         await MuatKunjunganHariIniAsync();
 
@@ -145,18 +134,57 @@ public partial class AbsensiPertamaViewModel : ObservableObject
         {
             GpsSiap = false;
             AlamatLokasi = "Lokasi perangkat belum tersedia";
-            KoordinatLokasi = "Aktifkan izin lokasi untuk melanjutkan absensi.";
+            AkurasiLokasi = "Aktifkan izin lokasi untuk melanjutkan absensi.";
             LabelLokasi = "GPS tidak siap";
             MuatPetaDefault();
             return;
         }
 
+        await PerbaruiLokasiAsync(lokasi);
+    }
+
+    private async Task PerbaruiLokasiAsync(GpsService.Lokasi lokasi)
+    {
         GpsSiap = true;
-        AlamatLokasi = "Titik lokasi perangkat saat ini";
-        KoordinatLokasi =
-            $"{lokasi.Latitude:F4}, {lokasi.Longitude:F4} - Akurasi +/-{lokasi.AkurasiMeter:F0} meter";
         LabelLokasi = $"GPS +/-{lokasi.AkurasiMeter:F0} m";
+        AkurasiLokasi = $"Akurasi +/-{lokasi.AkurasiMeter:F0} meter";
+        AlamatLokasi = "Mencari alamat...";
         PerbaruiPeta(lokasi.Latitude, lokasi.Longitude, lokasi.AkurasiMeter);
+
+        var alamat = await _gps.GetAlamatAsync(lokasi.Latitude, lokasi.Longitude);
+        AlamatLokasi = string.IsNullOrWhiteSpace(alamat)
+            ? "Alamat tidak tersedia"
+            : alamat;
+    }
+
+    private void MulaiJam()
+    {
+        PerbaruiJam();
+
+        if (_jamTimer is null)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher is null)
+            {
+                return;
+            }
+
+            _jamTimer = dispatcher.CreateTimer();
+            _jamTimer.Interval = TimeSpan.FromSeconds(1);
+            _jamTimer.Tick += (_, _) => PerbaruiJam();
+        }
+
+        _jamTimer.Start();
+    }
+
+    /// <summary>Menghentikan pembaruan jam saat halaman tidak lagi tampil.</summary>
+    public void HentikanJam() => _jamTimer?.Stop();
+
+    private void PerbaruiJam()
+    {
+        var sekarang = DateTime.Now;
+        WaktuSekarang = sekarang.ToString("HH:mm:ss");
+        TanggalManusia = ApiMapper.Tanggal(sekarang);
     }
 
     private async void PerbaruiPeta(double lat, double lon, double akurasi)
@@ -244,11 +272,7 @@ public partial class AbsensiPertamaViewModel : ObservableObject
         }
 
         GpsSiap = true;
-        AlamatLokasi = "Titik lokasi perangkat saat ini";
-        KoordinatLokasi =
-            $"{lokasi.Latitude:F4}, {lokasi.Longitude:F4} - Akurasi +/-{lokasi.AkurasiMeter:F0} meter";
-        LabelLokasi = $"GPS +/-{lokasi.AkurasiMeter:F0} m";
-        PerbaruiPeta(lokasi.Latitude, lokasi.Longitude, lokasi.AkurasiMeter);
+        await PerbaruiLokasiAsync(lokasi);
 
         _flow.NomorAbsensi = NomorAbsensi;
         _flow.Tanggal = _session.TanggalHariIni;

@@ -11,6 +11,49 @@ public class GpsService
 {
     public record Lokasi(double Latitude, double Longitude, double AkurasiMeter);
 
+    /// <summary>
+    /// Mengubah koordinat menjadi alamat yang bisa dibaca manusia. Koordinat tetap
+    /// dipakai untuk penyimpanan dan pengecekan radius; method ini hanya untuk tampilan.
+    /// </summary>
+    public async Task<string?> GetAlamatAsync(double latitude, double longitude)
+    {
+        try
+        {
+            var placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
+            var tempat = placemarks?.FirstOrDefault();
+            if (tempat is null)
+            {
+                return null;
+            }
+
+            var bagian = new[]
+            {
+                tempat.Thoroughfare,
+                tempat.SubThoroughfare,
+                tempat.SubLocality,
+                tempat.Locality,
+                tempat.SubAdminArea,
+                tempat.AdminArea,
+                tempat.PostalCode,
+                tempat.CountryName
+            };
+
+            var alamat = string.Join(", ", bagian
+                .Where(b => !string.IsNullOrWhiteSpace(b))
+                .Distinct());
+
+            return string.IsNullOrWhiteSpace(alamat) ? null : alamat;
+        }
+        catch (FeatureNotSupportedException)
+        {
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public async Task<Lokasi?> GetLokasiAsync(
         double? dekatLat = null,
         double? dekatLon = null,

@@ -38,6 +38,19 @@ public sealed class ApiService : IDisposable
     /// <summary>Jumlah percobaan ulang setelah tantangan JavaScript hosting.</summary>
     private const int MaksPercobaanTantangan = 2;
 
+    /// <summary>
+    /// Jumlah percobaan ulang bila hosting membalas HTML / body kosong (bukan JSON).
+    /// Request yang sampai ke PHP selalu membalas JSON, jadi percobaan ulang
+    /// tidak akan menggandakan aksi di server.
+    /// </summary>
+    private const int MaksPercobaanUlangHtml = 2;
+
+    /// <summary>
+    /// Jeda sebelum mengulang request, memberi waktu proteksi hosting
+    /// mengenali cookie tantangan yang baru dihitung.
+    /// </summary>
+    private static readonly TimeSpan JedaPercobaanUlang = TimeSpan.FromMilliseconds(600);
+
     private readonly HttpClient _http;
     private readonly bool _memilikiHttpClient;
 
@@ -205,6 +218,35 @@ public sealed class ApiService : IDisposable
             HttpMethod.Post,
             "sales.php",
             new SalesActionRequest { Action = "delete", IdSales = idSales },
+            butuhToken: true,
+            ct);
+
+    /* ============================================================
+     * WAJAH (token biometrik milik sales sendiri)
+     * ============================================================ */
+
+    /// <summary>
+    /// GET wajah.php — status token wajah akun yang sedang login.
+    /// Server tidak pernah menyimpan foto, hanya token Base64.
+    /// </summary>
+    public Task<ApiResult<WajahStatusData>> GetStatusWajahAsync(CancellationToken ct = default)
+        => KirimAsync<WajahStatusData>(HttpMethod.Get, "wajah.php", null, butuhToken: true, ct);
+
+    /// <summary>POST wajah.php (action=simpan) — simpan token wajah.</summary>
+    public Task<ApiResult<WajahStatusData>> SimpanWajahAsync(string faceData, CancellationToken ct = default)
+        => KirimAsync<WajahStatusData>(
+            HttpMethod.Post,
+            "wajah.php",
+            new WajahSimpanRequest { FaceData = faceData },
+            butuhToken: true,
+            ct);
+
+    /// <summary>POST wajah.php (action=hapus) — hapus token wajah.</summary>
+    public Task<ApiResult<WajahStatusData>> HapusWajahAsync(CancellationToken ct = default)
+        => KirimAsync<WajahStatusData>(
+            HttpMethod.Post,
+            "wajah.php",
+            new WajahHapusRequest(),
             butuhToken: true,
             ct);
 
@@ -386,6 +428,7 @@ public sealed class ApiService : IDisposable
         try
         {
             var percobaanTantangan = 0;
+            var percobaanUlang = 0;
 
             while (true)
             {
@@ -437,6 +480,10 @@ public sealed class ApiService : IDisposable
 
                     _cookieTantangan = "__test=" + cookie;
                     percobaanTantangan++;
+
+                    // Beri jeda sebentar supaya proteksi hosting sempat mengenali
+                    // cookie sebelum request diulang.
+                    await Task.Delay(JedaPercobaanUlang, ct);
                     continue;
                 }
 
@@ -453,6 +500,13 @@ public sealed class ApiService : IDisposable
 
                 if (string.IsNullOrWhiteSpace(teks))
                 {
+                    if (percobaanUlang < MaksPercobaanUlangHtml)
+                    {
+                        percobaanUlang++;
+                        await Task.Delay(JedaPercobaanUlang, ct);
+                        continue;
+                    }
+
                     return ApiResult<T>.Gagal(
                         $"Server tidak mengirim data (HTTP {status}). Periksa file PHP di hosting.",
                         "RESPONSE_KOSONG",
@@ -466,6 +520,16 @@ public sealed class ApiService : IDisposable
                 }
                 catch (JsonException)
                 {
+                    // Hosting kadang masih membalas halaman HTML pada percobaan
+                    // pertama walau cookie tantangan sudah disimpan. Request yang
+                    // sudah sampai ke PHP selalu JSON, jadi aman diulang.
+                    if (percobaanUlang < MaksPercobaanUlangHtml)
+                    {
+                        percobaanUlang++;
+                        await Task.Delay(JedaPercobaanUlang, ct);
+                        continue;
+                    }
+
                     return ApiResult<T>.Gagal(
                         $"Response bukan JSON (HTTP {status}, {tipeKonten}). " +
                         "Server mengembalikan halaman HTML, biasanya karena file PHP belum " +

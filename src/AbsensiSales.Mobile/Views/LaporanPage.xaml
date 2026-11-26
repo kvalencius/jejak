@@ -10,39 +10,56 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid>
 
-        <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="20,20,20,20" Spacing="0">
-
-                <controls:BackButton FallbackRoute="//utama/absensi" Margin="0,0,0,12" />
+        <ScrollView>
+            <VerticalStackLayout Padding="20,20,20,92" Spacing="0">
 
                 <!-- Header -->
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Margin="0,0,0,18">
-                    <controls:SolidCard
+                <Grid
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="10"
+                    Margin="0,0,0,18">
+
+                    <!-- Tombol Back -->
+                    <controls:BackButton
                         Grid.Column="0"
-                        Tone="Navy"
-                        Padding="0"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        StrokeShape="RoundRectangle 13">
-                        <Label
-                            Text="RP"
-                            TextColor="{StaticResource White}"
-                            FontFamily="OpenSansSemibold"
-                            FontSize="13"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center" />
-                    </controls:SolidCard>
-                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                        <Label Text="Jejak Sales" FontSize="16" FontFamily="InterBold" />
-                        <Label Text="Ringkasan kunjungan" FontSize="11" TextColor="{StaticResource TextSecondary}" />
-                    </VerticalStackLayout>
-                    <Label Grid.Column="2" Text="HARI INI" Style="{StaticResource BadgeInfo}" VerticalOptions="Center" />
+                        FallbackRoute="//login"
+                        Margin="0"
+                        VerticalOptions="Center"/>
+
+                    <!-- Logo, Nama, dan Status -->
+                    <Grid
+                        Grid.Column="1"
+                        ColumnDefinitions="Auto,*,Auto"
+                        ColumnSpacing="10"
+                        VerticalOptions="Center">
+
+                        <Image
+                            Grid.Column="0"
+                            Source="logo_jejak.png"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            Aspect="AspectFit"
+                            VerticalOptions="Center"/>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="1"
+                            VerticalOptions="Center">
+
+                            <Label
+                                Text="Jejak Sales"
+                                FontSize="16"
+                                FontFamily="InterBold"/>
+
+                        </VerticalStackLayout>
+
+                    </Grid>
                 </Grid>
 
                 <Label Text="Laporan saya" Style="{StaticResource TitleLabel}" Margin="0,0,0,4" />
-                <Label Text="{Binding InfoSales}" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,16" />
+                <!-- <Label Text="{Binding InfoSales}" Style="{StaticResource SubtitleLabel}" Margin="0,0,0,16" /> -->
 
                 <!-- Pilih tanggal (tampilan) -->
                 <controls:SolidCard Tone="Navy" Padding="14" Margin="0,0,0,12">
@@ -110,9 +127,12 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <controls:BottomNavBar Grid.Row="1" ActiveTab="laporan" Margin="16,4,16,14" />
+        <controls:BottomNavBar
+                ActiveTab="laporan"
+                VerticalOptions="End"
+                Margin="16,0,16,14" />
 
-        <controls:NotificationHost Grid.RowSpan="2" Margin="0,0,0,92" />
+        <controls:NotificationHost Margin="0,0,0,92" />
 
     </Grid>
 </ContentPage>

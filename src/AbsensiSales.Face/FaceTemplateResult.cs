@@ -7,8 +7,7 @@ namespace AbsensiSales.Face;
 public sealed record FaceTemplateResult(
     string? Template,
     int JumlahWajah,
-    string Pesan,
-    bool Simulasi = false)
+    string Pesan)
 {
-    public bool Berhasil => !string.IsNullOrWhiteSpace(Template) && !Simulasi;
+    public bool Berhasil => !string.IsNullOrWhiteSpace(Template);
 }

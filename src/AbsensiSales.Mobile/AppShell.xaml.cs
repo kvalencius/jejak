@@ -8,6 +8,7 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute("pengisian-toko", typeof(Views.PengisianTokoPage));
         Routing.RegisterRoute("verifikasi-wajah", typeof(Views.VerifikasiWajahPage));
+        Routing.RegisterRoute("daftar-wajah", typeof(Views.DaftarWajahPage));
         Routing.RegisterRoute("foto-toko", typeof(Views.FotoTokoPage));
         Routing.RegisterRoute("verifikasi-data", typeof(Views.VerifikasiDataPage));
         Routing.RegisterRoute("pengajuan-izin", typeof(Views.PengajuanIzinPage));
